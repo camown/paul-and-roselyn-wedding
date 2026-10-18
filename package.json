@@ -1,0 +1,17 @@
+{
+  "name": "paul-and-roselyn-wedding-invitation",
+  "version": "1.0.0",
+  "description": "Paul & Roselyn Wedding Invitation Web Application",
+  "private": true,
+  "scripts": {
+    "start": "npx serve -l 3000",
+    "deploy": "npx vercel --prod"
+  },
+  "keywords": [
+    "wedding-invitation",
+    "paul-and-roselyn",
+    "philippines-wedding"
+  ],
+  "author": "Paul & Roselyn",
+  "license": "UNLICENSED"
+}
