@@ -1,6 +1,6 @@
 /**
  * Paul & Roselyn Wedding Invitation Web Application
- * Native High-Resolution Codebase with Working RSVP Backend & Local Persistence
+ * Native High-Resolution Codebase with Working RSVP Backend & Dev Photo Settings
  * Event Date: December 19, 2026 · 9:00 AM (UTC+8) · Imus, Cavite, Philippines
  */
 
@@ -83,7 +83,6 @@
   // ============================================================
   // 4. Photo Customizer with LocalStorage Persistence
   // ============================================================
-  // Default high-res placeholders (tasteful rustic couple, cathedral, rings)
   const defaultPlaceholders = {
     'story-photo': 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1000&q=80',
     'gallery-photo-1': 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
@@ -91,28 +90,25 @@
     'gallery-photo-3': 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80'
   };
 
-  // Restore stored photos on page load
+  function updateSlotImages(slotId, imgSrc) {
+    const mainImg = document.getElementById(slotId);
+    if (mainImg) mainImg.src = imgSrc;
+
+    const thumbImg = document.getElementById('thumb-' + slotId);
+    if (thumbImg) thumbImg.src = imgSrc;
+  }
+
   function loadPersistedPhotos() {
     Object.keys(defaultPlaceholders).forEach(slotId => {
-      const imgEl = document.getElementById(slotId);
-      if (!imgEl) return;
       const saved = localStorage.getItem('wedding_custom_photo_' + slotId);
-      if (saved) {
-        imgEl.src = saved;
-      } else {
-        imgEl.src = defaultPlaceholders[slotId];
-      }
+      const src = saved || defaultPlaceholders[slotId];
+      updateSlotImages(slotId, src);
     });
   }
 
   loadPersistedPhotos();
 
-  // Setup file picker triggers for all photo change buttons
-  document.querySelectorAll('[data-photo-trigger]').forEach(btn => {
-    const slotId = btn.getAttribute('data-photo-trigger');
-    const imgEl = document.getElementById(slotId);
-    if (!imgEl) return;
-
+  function setupPhotoUploadTrigger(btn, slotId) {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -131,18 +127,66 @@
       const reader = new FileReader();
       reader.onload = () => {
         const base64Data = reader.result;
-        imgEl.src = base64Data;
+        updateSlotImages(slotId, base64Data);
         try {
           localStorage.setItem('wedding_custom_photo_' + slotId, base64Data);
           showToast('✓ Photo updated and saved!');
         } catch (err) {
-          // In case localStorage quota is exceeded with massive images
           showToast('✓ Photo preview updated!');
         }
       };
       reader.readAsDataURL(file);
     });
+  }
+
+  // Setup inline change buttons
+  document.querySelectorAll('[data-photo-trigger]').forEach(btn => {
+    const slotId = btn.getAttribute('data-photo-trigger');
+    setupPhotoUploadTrigger(btn, slotId);
   });
+
+  // Setup Dev Drawer upload buttons
+  document.querySelectorAll('[data-drawer-upload]').forEach(btn => {
+    const slotId = btn.getAttribute('data-drawer-upload');
+    setupPhotoUploadTrigger(btn, slotId);
+  });
+
+  // Reset all photos button
+  const btnDevResetAll = document.getElementById('btnDevResetAll');
+  if (btnDevResetAll) {
+    btnDevResetAll.addEventListener('click', () => {
+      if (confirm('Reset all custom uploaded photos back to default placeholders?')) {
+        Object.keys(defaultPlaceholders).forEach(slotId => {
+          localStorage.removeItem('wedding_custom_photo_' + slotId);
+          updateSlotImages(slotId, defaultPlaceholders[slotId]);
+        });
+        showToast('✓ All photos restored to defaults.');
+      }
+    });
+  }
+
+  // Dev Settings Drawer Toggle
+  const devSettingsToggleBtn = document.getElementById('devSettingsToggleBtn');
+  const devDrawerBackdrop = document.getElementById('devDrawerBackdrop');
+  const devDrawerClose = document.getElementById('devDrawerClose');
+
+  if (devSettingsToggleBtn && devDrawerBackdrop) {
+    devSettingsToggleBtn.addEventListener('click', () => {
+      devDrawerBackdrop.classList.add('open');
+    });
+
+    if (devDrawerClose) {
+      devDrawerClose.addEventListener('click', () => {
+        devDrawerBackdrop.classList.remove('open');
+      });
+    }
+
+    devDrawerBackdrop.addEventListener('click', (e) => {
+      if (e.target === devDrawerBackdrop) {
+        devDrawerBackdrop.classList.remove('open');
+      }
+    });
+  }
 
   // ============================================================
   // 5. Interactive Dress Code Palette Chips
@@ -174,7 +218,6 @@
     });
   });
 
-  // Load existing RSVPs from localStorage
   function getLocalRsvps() {
     try {
       const data = localStorage.getItem('wedding_rsvps');
@@ -216,34 +259,25 @@
         createdAt: new Date().toISOString()
       };
 
-      // Disable button and show spinner
       if (btnSubmitRsvp) {
         btnSubmitRsvp.disabled = true;
-        btnSubmitRsvp.innerHTML = `
-          <svg class="spinner-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>
-          Recording Your RSVP...
-        `;
+        btnSubmitRsvp.innerHTML = `Recording Your RSVP...`;
       }
 
       // 1. Try sending to /api/rsvp (Backend Serverless)
-      let backendSuccess = false;
       try {
-        const response = await fetch('/api/rsvp', {
+        await fetch('/api/rsvp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(rsvpData)
         });
-        if (response.ok) {
-          backendSuccess = true;
-        }
       } catch (err) {
-        console.warn('Backend API note: Storing locally in persistent database.');
+        console.warn('Backend note: Stored in persistent local database.');
       }
 
       // 2. Always persist locally
       saveLocalRsvp(rsvpData);
 
-      // Reset button
       if (btnSubmitRsvp) {
         btnSubmitRsvp.disabled = false;
         btnSubmitRsvp.innerHTML = `Send RSVP`;
@@ -259,7 +293,6 @@
           : 'Regretfully Declined with love.';
       }
 
-      // Setup WhatsApp button in modal
       const btnModalWhatsapp = document.getElementById('btnModalWhatsapp');
       if (btnModalWhatsapp) {
         const waText = [
@@ -295,7 +328,6 @@
 
   function renderAdminDashboard() {
     const list = getLocalRsvps();
-
     let attendingCount = 0;
     let totalHeadcount = 0;
 
@@ -335,7 +367,6 @@
     });
   }
 
-  // Keyboard shortcut for couple to open admin: Ctrl + Shift + A
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
       e.preventDefault();
@@ -389,8 +420,18 @@
   });
 
   // ============================================================
-  // 9. Calendar .ics Download
+  // 9. Calendar Options & .ics Download
   // ============================================================
+  const btnAddToCalendar = document.getElementById('btnAddToCalendar');
+  const calendarModal = document.getElementById('calendarModal');
+
+  if (btnAddToCalendar && calendarModal) {
+    btnAddToCalendar.addEventListener('click', (e) => {
+      e.preventDefault();
+      calendarModal.classList.add('open');
+    });
+  }
+
   const downloadIcsBtn = document.getElementById('downloadIcsBtn');
   if (downloadIcsBtn) {
     downloadIcsBtn.addEventListener('click', function (e) {
@@ -434,7 +475,7 @@
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.app-modal.open, .admin-modal-overlay.open').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.app-modal.open, .admin-modal-overlay.open, .dev-drawer-backdrop.open').forEach(m => m.classList.remove('open'));
     }
   });
 

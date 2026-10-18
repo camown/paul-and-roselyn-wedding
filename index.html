@@ -26,6 +26,14 @@
 </head>
 <body>
 
+  <!-- ================= FLOATING DEV PHOTO SETTINGS (RIGHT EDGE) ================= -->
+  <!-- TEMPORARY FOR DEVELOPMENT: Can be easily removed later -->
+  <button class="dev-settings-toggle-btn" id="devSettingsToggleBtn" type="button" aria-label="Open photo customization drawer">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    <span>Photos</span>
+    <span class="dev-badge-tiny">DEV</span>
+  </button>
+
   <div class="invite-app">
     <!-- Sticky Quick Navigation -->
     <nav class="app-nav" aria-label="Invitation Navigation">
@@ -44,8 +52,6 @@
       <section class="envelope-hero" id="envelope" aria-label="Wedding Envelope">
         <div class="envelope-wrapper">
           <div class="envelope-box">
-            <div class="envelope-flap-decor" aria-hidden="true"></div>
-
             <div class="envelope-header">
               <div class="envelope-monogram-top">Paul &amp; Roselyn</div>
               <div class="envelope-date-top">12 · 19 · 2026</div>
@@ -140,10 +146,6 @@
         <!-- Interactive Photo Box with Customizer -->
         <div class="photo-interactive-card">
           <img class="main-photo-view" id="story-photo" alt="Paul &amp; Roselyn Love Story" src="" />
-          <button class="photo-change-btn-overlay" data-photo-trigger="story-photo" type="button">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-            Change Picture
-          </button>
         </div>
 
         <div class="story-text-card">
@@ -270,7 +272,6 @@
         <div class="polaroid-grid">
           <!-- Frame 1 -->
           <div class="polaroid-frame">
-            <button class="gallery-upload-pill" data-photo-trigger="gallery-photo-1" type="button">Change Photo</button>
             <div class="polaroid-img-wrap">
               <img id="gallery-photo-1" alt="Paul &amp; Roselyn Gallery 1" src="" />
             </div>
@@ -279,7 +280,6 @@
 
           <!-- Frame 2 -->
           <div class="polaroid-frame">
-            <button class="gallery-upload-pill" data-photo-trigger="gallery-photo-2" type="button">Change Photo</button>
             <div class="polaroid-img-wrap">
               <img id="gallery-photo-2" alt="Paul &amp; Roselyn Gallery 2" src="" />
             </div>
@@ -288,7 +288,6 @@
 
           <!-- Frame 3 -->
           <div class="polaroid-frame">
-            <button class="gallery-upload-pill" data-photo-trigger="gallery-photo-3" type="button">Change Photo</button>
             <div class="polaroid-img-wrap">
               <img id="gallery-photo-3" alt="Paul &amp; Roselyn Gallery 3" src="" />
             </div>
@@ -299,34 +298,36 @@
 
       <!-- ================= SECTION 7: LIVE COUNTDOWN TICKER ================= -->
       <section class="countdown-section" id="countdown" aria-label="Live Wedding Countdown">
-        <div class="section-tag" style="color:#e5c39b;">Mark Your Calendars</div>
-        <h2 class="section-title">Countdown to Our Wedding Day</h2>
+        <div class="countdown-content-wrap">
+          <div class="section-tag" style="color:#ffd89e;">Mark Your Calendars</div>
+          <h2 class="section-title">Countdown to Our Wedding Day</h2>
 
-        <div class="countdown-cards-row" role="timer" aria-live="off">
-          <div class="countdown-card">
-            <div class="cd-digit" id="cdDays">--</div>
-            <div class="cd-label">Days</div>
+          <div class="countdown-cards-row" role="timer" aria-live="off">
+            <div class="countdown-card">
+              <div class="cd-digit" id="cdDays">--</div>
+              <div class="cd-label">Days</div>
+            </div>
+            <span class="cd-colon-divider">:</span>
+            <div class="countdown-card">
+              <div class="cd-digit" id="cdHours">--</div>
+              <div class="cd-label">Hours</div>
+            </div>
+            <span class="cd-colon-divider">:</span>
+            <div class="countdown-card">
+              <div class="cd-digit" id="cdMinutes">--</div>
+              <div class="cd-label">Mins</div>
+            </div>
+            <span class="cd-colon-divider">:</span>
+            <div class="countdown-card">
+              <div class="cd-digit" id="cdSeconds">--</div>
+              <div class="cd-label">Secs</div>
+            </div>
           </div>
-          <span class="cd-colon-divider">:</span>
-          <div class="countdown-card">
-            <div class="cd-digit" id="cdHours">--</div>
-            <div class="cd-label">Hours</div>
-          </div>
-          <span class="cd-colon-divider">:</span>
-          <div class="countdown-card">
-            <div class="cd-digit" id="cdMinutes">--</div>
-            <div class="cd-label">Mins</div>
-          </div>
-          <span class="cd-colon-divider">:</span>
-          <div class="countdown-card">
-            <div class="cd-digit" id="cdSeconds">--</div>
-            <div class="cd-label">Secs</div>
-          </div>
+
+          <p class="countdown-quote">
+            “The best thing to hold onto in life is each other.”
+          </p>
         </div>
-
-        <p class="countdown-quote">
-          “The best thing to hold onto in life is each other.”
-        </p>
       </section>
 
       <!-- ================= SECTION 8: WORKING RSVP ================= -->
@@ -428,7 +429,7 @@
     <footer class="app-footer">
       <div class="footer-names">Paul &amp; Roselyn</div>
       <div>Saturday, December 19, 2026 · Imus Cathedral, Cavite</div>
-      <div style="margin-top: 6px; opacity: 0.7;">Forever Begins Here</div>
+      <div style="margin-top: 6px; opacity: 0.75;">Forever Begins Here</div>
 
       <button class="footer-admin-trigger" id="openAdminBtn" type="button">
         Guest List &amp; Admin Dashboard
@@ -538,6 +539,69 @@
       <div class="admin-actions-bar">
         <button class="btn-pill primary" id="exportCsvBtn" type="button">
           Export to CSV (Excel)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DEV PHOTO SETTINGS DRAWER ================= -->
+  <!-- Easily upload and personalize images during development -->
+  <div class="dev-drawer-backdrop" id="devDrawerBackdrop">
+    <div class="dev-drawer-panel">
+      <div class="dev-drawer-header">
+        <div class="dev-drawer-title">Photo Settings (Dev)</div>
+        <button class="dev-drawer-close" id="devDrawerClose" type="button">&times;</button>
+      </div>
+
+      <div class="dev-drawer-body">
+        <div class="dev-note-banner">
+          Upload your photos here. Changes update live and persist in your browser!
+        </div>
+
+        <!-- Slot 1: Story Photo -->
+        <div class="dev-photo-slot-row">
+          <img class="dev-slot-thumb" id="thumb-story-photo" alt="Story preview" src="" />
+          <div class="dev-slot-info">
+            <div class="dev-slot-name">Our Little Story Photo</div>
+            <div class="dev-slot-target">Section: #story</div>
+            <button class="btn-drawer-upload" data-drawer-upload="story-photo" type="button">Upload Photo</button>
+          </div>
+        </div>
+
+        <!-- Slot 2: Gallery Photo 1 -->
+        <div class="dev-photo-slot-row">
+          <img class="dev-slot-thumb" id="thumb-gallery-photo-1" alt="Gallery 1 preview" src="" />
+          <div class="dev-slot-info">
+            <div class="dev-slot-name">Gallery Photo 1</div>
+            <div class="dev-slot-target">Caption: Where it all began</div>
+            <button class="btn-drawer-upload" data-drawer-upload="gallery-photo-1" type="button">Upload Photo</button>
+          </div>
+        </div>
+
+        <!-- Slot 3: Gallery Photo 2 -->
+        <div class="dev-photo-slot-row">
+          <img class="dev-slot-thumb" id="thumb-gallery-photo-2" alt="Gallery 2 preview" src="" />
+          <div class="dev-slot-info">
+            <div class="dev-slot-name">Gallery Photo 2</div>
+            <div class="dev-slot-target">Caption: 9 years of love</div>
+            <button class="btn-drawer-upload" data-drawer-upload="gallery-photo-2" type="button">Upload Photo</button>
+          </div>
+        </div>
+
+        <!-- Slot 4: Gallery Photo 3 -->
+        <div class="dev-photo-slot-row">
+          <img class="dev-slot-thumb" id="thumb-gallery-photo-3" alt="Gallery 3 preview" src="" />
+          <div class="dev-slot-info">
+            <div class="dev-slot-name">Gallery Photo 3</div>
+            <div class="dev-slot-target">Caption: Same people, new chapter</div>
+            <button class="btn-drawer-upload" data-drawer-upload="gallery-photo-3" type="button">Upload Photo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dev-drawer-footer">
+        <button class="btn-dev-reset-all" id="btnDevResetAll" type="button">
+          Reset All Photos to Default Placeholders
         </button>
       </div>
     </div>
