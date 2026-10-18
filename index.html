@@ -597,6 +597,32 @@
             <button class="btn-drawer-upload" data-drawer-upload="gallery-photo-3" type="button">Upload Photo</button>
           </div>
         </div>
+
+        <!-- Google Sheets Sync Configuration -->
+        <div class="dev-note-banner" style="background:#e8f5e9; border-left-color:#2e7d32; color:#1b5e20;">
+          <strong>📊 Google Sheets Sync</strong><br />
+          Paste your Google Apps Script Web App URL below to automatically record all RSVPs directly into your Google Sheet!
+        </div>
+
+        <div style="background:#ffffff; border:1px solid var(--khaki); border-radius:var(--radius-sm); padding:12px;">
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--brown-mid); display:block; margin-bottom:5px;" for="inputGoogleSheetUrl">
+            Apps Script Web App URL:
+          </label>
+          <input
+            id="inputGoogleSheetUrl"
+            type="url"
+            placeholder="https://script.google.com/macros/s/.../exec"
+            style="width:100%; padding:9px 10px; font-size:12px; border:1px solid var(--khaki); border-radius:4px; margin-bottom:8px; box-sizing:border-box;"
+          />
+          <div style="display:flex; gap:8px;">
+            <button class="btn-drawer-upload" id="btnSaveSheetUrl" type="button" style="background:#2e7d32; flex:1; padding:7px;">
+              Save URL
+            </button>
+            <button class="btn-drawer-upload" id="btnTestSheetSync" type="button" style="background:#1565c0; flex:1; padding:7px;">
+              Send Test Row
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="dev-drawer-footer">

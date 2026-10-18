@@ -187,6 +187,56 @@
       }
     });
   }
+  // Google Sheets Configuration in Dev Drawer
+  const inputGoogleSheetUrl = document.getElementById('inputGoogleSheetUrl');
+  const btnSaveSheetUrl = document.getElementById('btnSaveSheetUrl');
+  const btnTestSheetSync = document.getElementById('btnTestSheetSync');
+
+  if (inputGoogleSheetUrl) {
+    inputGoogleSheetUrl.value = localStorage.getItem('wedding_google_sheet_url') || '';
+  }
+
+  if (btnSaveSheetUrl && inputGoogleSheetUrl) {
+    btnSaveSheetUrl.addEventListener('click', () => {
+      const url = inputGoogleSheetUrl.value.trim();
+      if (!url) {
+        localStorage.removeItem('wedding_google_sheet_url');
+        showToast('Google Sheets URL cleared.');
+      } else {
+        localStorage.setItem('wedding_google_sheet_url', url);
+        showToast('✓ Google Sheets Web App URL saved!');
+      }
+    });
+  }
+
+  if (btnTestSheetSync && inputGoogleSheetUrl) {
+    btnTestSheetSync.addEventListener('click', async () => {
+      const url = inputGoogleSheetUrl.value.trim() || localStorage.getItem('wedding_google_sheet_url');
+      if (!url) {
+        showToast('Please paste your Google Apps Script URL first.');
+        return;
+      }
+      showToast('Sending test row to Google Sheet...');
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'Test Guest (Setup Verification)',
+            attendance: 'Joyfully Accepts',
+            guests: '2',
+            contact: '0917-123-4567',
+            message: 'Testing Google Sheet sync for Paul & Roselyn!',
+            timestamp: new Date().toISOString()
+          })
+        });
+        showToast('✓ Test row dispatched to Google Sheet!');
+      } catch (err) {
+        showToast('Error sending to sheet: ' + err.message);
+      }
+    });
+  }
 
   // ============================================================
   // 5. Interactive Dress Code Palette Chips
@@ -275,7 +325,29 @@
         console.warn('Backend note: Stored in persistent local database.');
       }
 
-      // 2. Always persist locally
+      // 2. Dispatch to Google Sheets if configured
+      const sheetUrl = localStorage.getItem('wedding_google_sheet_url');
+      if (sheetUrl && sheetUrl.trim() !== '') {
+        try {
+          fetch(sheetUrl.trim(), {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: rsvpData.name,
+              attendance: rsvpData.attendance,
+              guests: rsvpData.guests,
+              contact: rsvpData.contact,
+              message: rsvpData.message,
+              timestamp: rsvpData.createdAt
+            })
+          }).catch(e => console.warn('Google Sheet fetch note:', e));
+        } catch (e) {
+          console.warn('Google Sheet dispatch note:', e);
+        }
+      }
+
+      // 3. Always persist locally
       saveLocalRsvp(rsvpData);
 
       if (btnSubmitRsvp) {
@@ -445,7 +517,7 @@
         'DTSTART:20261219T010000Z',
         'DTEND:20261219T060000Z',
         'SUMMARY:Paul & Roselyn Wedding',
-        'DESCRIPTION:Paul & Roselyn Wedding Ceremony at Imus Cathedral (9:00 AM) and Reception at Nathan\\'s Catering (11:00 AM).',
+        'DESCRIPTION:Paul & Roselyn Wedding Ceremony at Imus Cathedral (9:00 AM) and Reception at Nathan\'s Catering (11:00 AM).',
         'LOCATION:Our Lady of the Pillar Parish (Imus Cathedral), Imus, Cavite, Philippines',
         'END:VEVENT',
         'END:VCALENDAR'
