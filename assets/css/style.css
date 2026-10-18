@@ -85,37 +85,56 @@ body {
 }
 
 /* ============================================================
-   Sticky Navigation Bar
+   Sticky Navigation Bar (Revealed After Envelope Unseals)
    ============================================================ */
 .app-nav {
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 10px 14px;
-  background: rgba(42, 24, 15, 0.94);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(205, 178, 138, 0.4);
+  background: rgba(30, 16, 9, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(205, 178, 138, 0.45);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.app-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.app-nav.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .app-nav a {
   font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #faeedb;
   text-decoration: none;
   border: 1px solid rgba(205, 178, 138, 0.5);
   border-radius: var(--radius-full);
-  padding: 5px 11px;
+  padding: 6px 13px;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .app-nav a:hover,
@@ -128,24 +147,64 @@ body {
 }
 
 /* ============================================================
-   Section 1: 3D Wax Seal Envelope (Hero) with Atmospheric Texture
+   Section 1: 3D Wax Seal Envelope (Hero Landing Page)
    ============================================================ */
 .envelope-hero {
   position: relative;
-  padding: 40px 20px 50px;
-  background: linear-gradient(180deg, #24130a 0%, #3a2012 100%);
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px 60px;
+  background: radial-gradient(circle at 50% 40%, #3a1f12 0%, #201007 70%, #140804 100%);
   color: #faeedb;
   text-align: center;
   overflow: hidden;
-  perspective: 1200px;
+  perspective: 1400px;
+}
+
+/* Ambient Floating Golden Dust Sparks */
+.golden-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #ffe6b0 25%, rgba(255, 219, 144, 0) 80%);
+  border-radius: 50%;
+  animation: floatUp 7s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+.particle:nth-child(1) { left: 12%; top: 85%; animation-delay: 0s; width: 5px; height: 5px; }
+.particle:nth-child(2) { left: 28%; top: 90%; animation-delay: 1.8s; width: 3px; height: 3px; }
+.particle:nth-child(3) { left: 50%; top: 80%; animation-delay: 4.2s; width: 6px; height: 6px; }
+.particle:nth-child(4) { left: 72%; top: 88%; animation-delay: 2.5s; width: 4px; height: 4px; }
+.particle:nth-child(5) { left: 88%; top: 75%; animation-delay: 3.6s; width: 5px; height: 5px; }
+.particle:nth-child(6) { left: 40%; top: 65%; animation-delay: 5.1s; width: 3px; height: 3px; }
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  20% { opacity: 0.75; }
+  80% { opacity: 0.75; }
+  100% { transform: translateY(-380px) scale(1.2); opacity: 0; }
 }
 
 .envelope-wrapper {
   position: relative;
+  z-index: 2;
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
   border-radius: var(--radius-md);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(184, 82, 43, 0.15);
   transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -155,8 +214,8 @@ body {
   background: #6e3218 url('../images/envelope-card-bg.jpg') center/cover no-repeat;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 219, 164, 0.45);
-  padding: 44px 24px 44px;
-  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5), 0 20px 45px rgba(0, 0, 0, 0.55);
+  padding: 48px 24px 44px;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5), 0 16px 45px rgba(0, 0, 0, 0.55);
   overflow: hidden;
 }
 
@@ -164,59 +223,120 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(30, 15, 8, 0.35) 0%, rgba(30, 15, 8, 0.55) 100%);
+  background: linear-gradient(180deg, rgba(30, 15, 8, 0.3) 0%, rgba(30, 15, 8, 0.6) 100%);
   pointer-events: none;
 }
 
+/* Sweeping Golden Shine on Envelope */
+.envelope-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 235, 185, 0.5) 45%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 235, 185, 0.5) 55%, transparent 80%);
+  transform: translateX(-150%) skewX(-20deg);
+}
+
+.envelope-hero.opening .envelope-shine {
+  animation: envelopeShimmerSweep 1.4s ease-in-out forwards;
+}
+
+@keyframes envelopeShimmerSweep {
+  0% { opacity: 0; transform: translateX(-150%) skewX(-20deg); }
+  25% { opacity: 0.95; }
+  100% { opacity: 0; transform: translateX(150%) skewX(-20deg); }
+}
+
+/* Invitation Card Inside Peek */
+.envelope-card-peek {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 15%;
+  bottom: 25%;
+  background: #fdf8ee url('../images/invitation-card-bg.jpg') center/cover no-repeat;
+  border: 1px solid rgba(205, 178, 138, 0.8);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(0);
+  transition: transform 1.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.envelope-hero.opening .envelope-card-peek {
+  opacity: 1;
+  transform: translateY(-90px) scale(1.03);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.65);
+}
+
+/* Header Text on Envelope */
 .envelope-header {
   position: relative;
-  z-index: 2;
-  margin-bottom: 24px;
+  z-index: 5;
+  margin-bottom: 22px;
+}
+
+.envelope-pretitle {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #ffdca3;
+  margin-bottom: 8px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  opacity: 0.9;
 }
 
 .envelope-monogram-top {
-  font-family: var(--font-display);
-  font-size: 16px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  font-family: var(--font-script);
+  font-size: clamp(42px, 10vw, 58px);
   color: #ffd89e;
-  margin-bottom: 6px;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+  line-height: 1.1;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 15px rgba(255, 216, 158, 0.3);
 }
 
 .envelope-date-top {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  letter-spacing: 0.18em;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: #f7d8b5;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  opacity: 0.85;
+  max-width: 90%;
+  margin: 0 auto;
 }
 
-/* Animated 3D Wax Seal */
+/* Animated 3D Wax Seal Button */
 .wax-seal-container {
   position: relative;
-  z-index: 5;
+  z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 18px 0 14px;
+  margin: 20px 0 14px;
 }
 
 .wax-seal-btn {
-  width: 98px;
-  height: 98px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
   border: none;
   outline: none;
   cursor: pointer;
   background: radial-gradient(circle at 35% 30%, #be572e 0%, #873615 55%, #59200a 100%);
-  box-shadow: var(--shadow-wax);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 25px rgba(224, 150, 70, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   touch-action: manipulation;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: sealPulse 2.4s ease-in-out infinite;
 }
 
@@ -230,11 +350,40 @@ body {
 }
 
 .wax-seal-btn:hover {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 
 .wax-seal-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
+}
+
+.seal-ring-wave {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 224, 160, 0.8);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.envelope-hero.opening .seal-ring-wave {
+  animation: shockwaveRing 0.85s ease-out forwards;
+}
+
+@keyframes shockwaveRing {
+  0% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.envelope-hero.opening .wax-seal-btn {
+  animation: sealReleaseAnim 0.75s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes sealReleaseAnim {
+  0% { transform: scale(1); filter: brightness(1); }
+  35% { transform: scale(1.15); filter: brightness(1.3); }
+  100% { transform: scale(1.4); opacity: 0; }
 }
 
 .wax-seal-inner {
@@ -243,44 +392,51 @@ body {
   align-items: center;
   justify-content: center;
   color: #ffd89e;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 -1px 1px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 -1px 1px rgba(255, 255, 255, 0.35);
 }
 
 .seal-monogram {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   line-height: 1;
 }
 
 .seal-icon-botanical {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
-  margin-top: 2px;
+  width: 32px;
+  height: 18px;
+  color: #ffd89e;
+  margin-top: 3px;
+  opacity: 0.9;
 }
 
-/* Tap Cue */
+/* Tap Cue with Floating Sparkles */
 .seal-cue-text {
-  margin-top: 14px;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 17px;
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: #ffdca3;
   display: flex;
   align-items: center;
-  gap: 6px;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-  animation: bounceDown 1.5s ease-in-out infinite;
+  gap: 8px;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.85);
+  animation: gentlePulse 2s ease-in-out infinite;
+}
+
+.cue-sparkle {
+  font-size: 13px;
+  animation: sparkleTwinkle 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes sealPulse {
   0%, 100% {
-    box-shadow: 0 6px 20px rgba(102, 36, 13, 0.5), 0 0 0 0 rgba(224, 177, 89, 0);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 18px rgba(224, 150, 70, 0.3);
   }
   50% {
-    box-shadow: 0 8px 26px rgba(102, 36, 13, 0.7), 0 0 25px 8px rgba(224, 177, 89, 0.45);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.7), 0 0 30px 10px rgba(224, 177, 89, 0.55);
   }
 }
 
@@ -289,9 +445,14 @@ body {
   to { transform: rotate(360deg); }
 }
 
-@keyframes bounceDown {
+@keyframes gentlePulse {
   0%, 100% { transform: translateY(0); opacity: 0.85; }
-  50% { transform: translateY(4px); opacity: 1; }
+  50% { transform: translateY(2px); opacity: 1; }
+}
+
+@keyframes sparkleTwinkle {
+  from { transform: scale(0.9); opacity: 0.6; }
+  to { transform: scale(1.2); opacity: 1; }
 }
 
 /* ============================================================

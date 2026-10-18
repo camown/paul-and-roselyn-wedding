@@ -24,23 +24,68 @@
   }
 
   // ============================================================
-  // 2. Interactive Wax Seal & Envelope Opening
+  // 2. Interactive Wax Seal & Envelope Opening Experience
   // ============================================================
   const envelopeHero = document.querySelector('.envelope-hero');
   const waxSealBtn = document.getElementById('waxSealBtn');
+  const appNav = document.getElementById('appNav');
+
+  // Crystalline Wedding Harp/Chime Synthesizer (Zero External Network Dependencies)
+  function playWeddingChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') ctx.resume();
+
+      // Delicate D Major Harp Arpeggio: D4, F#4, A4, D5, F#5, A5
+      const notes = [293.66, 369.99, 440.00, 587.33, 739.99, 880.00];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
+
+        gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.1);
+        gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + idx * 0.1 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.1 + 1.2);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime + idx * 0.1);
+        osc.stop(ctx.currentTime + idx * 0.1 + 1.3);
+      });
+    } catch (err) {
+      // Audio is an optional delightful enhancement
+    }
+  }
+
+  // Reveal Navigation when scrolling past envelope
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 200) {
+      if (appNav) appNav.classList.add('visible');
+    }
+  }, { passive: true });
 
   if (waxSealBtn && envelopeHero) {
     waxSealBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      envelopeHero.classList.add('open');
-      showToast('Opening invitation...');
+      
+      // Play gentle chime
+      playWeddingChime();
 
+      // Trigger opening animation sequence
+      envelopeHero.classList.add('opening');
+      if (appNav) appNav.classList.add('visible');
+
+      // Smooth scroll to the formal invitation card after opening animation
       setTimeout(() => {
         const inviteSection = document.getElementById('invitation');
         if (inviteSection) {
           inviteSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 700);
+      }, 850);
     });
   }
 
