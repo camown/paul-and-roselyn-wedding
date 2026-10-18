@@ -13,5 +13,8 @@
     "philippines-wedding"
   ],
   "author": "Paul & Roselyn",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "jimp": "^1.6.1"
+  }
 }

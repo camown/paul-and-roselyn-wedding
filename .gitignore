@@ -2,3 +2,7 @@
 node_modules
 .DS_Store
 Thumbs.db
+scratch_*.js
+crop_photos.js
+assets/images/extracted_panels/
+

@@ -84,10 +84,10 @@
   // 4. Photo Customizer with LocalStorage Persistence
   // ============================================================
   const defaultPlaceholders = {
-    'story-photo': 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1000&q=80',
-    'gallery-photo-1': 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
-    'gallery-photo-2': 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
-    'gallery-photo-3': 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80'
+    'story-photo': 'assets/images/story-couple.jpg',
+    'gallery-photo-1': 'assets/images/gallery-photo-1.jpg',
+    'gallery-photo-2': 'assets/images/gallery-photo-2.jpg',
+    'gallery-photo-3': 'assets/images/gallery-photo-3.jpg'
   };
 
   function updateSlotImages(slotId, imgSrc) {
