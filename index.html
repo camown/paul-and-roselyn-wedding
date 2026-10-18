@@ -4,295 +4,368 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Paul &amp; Roselyn Wedding Invitation | December 19, 2026</title>
-  
-  <!-- SEO & Social Open Graph (For Messenger, Viber, WhatsApp) -->
+  <title>Paul &amp; Roselyn | Wedding Invitation — December 19, 2026</title>
+
+  <!-- Open Graph & Social Preview -->
   <meta name="description" content="Together with our families, we cordially invite you to celebrate the wedding of Paul &amp; Roselyn on Saturday, December 19, 2026, at Imus Cathedral, Cavite." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Paul &amp; Roselyn — Wedding Invitation" />
-  <meta property="og:description" content="December 19, 2026 · Imus Cathedral, Cavite. Tap to open the invitation, view event details, and RSVP." />
-  <meta property="og:image" content="assets/images/panel-2.jpg" />
+  <meta property="og:description" content="December 19, 2026 · Imus Cathedral, Cavite. Tap to view the invitation, event details, and RSVP." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80" />
   <meta property="og:url" content="https://camown.github.io/paul-and-roselyn-wedding/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#392418" />
+  <meta name="theme-color" content="#2a170e" />
 
-  <!-- Google Fonts Preconnect -->
+  <!-- Google Fonts: Alex Brush (Romantic Script), Cinzel (Roman Display), Cormorant Garamond (Editorial Serif), Montserrat (Clean Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
 
-  <div class="site-wrapper">
+  <div class="invite-app">
     <!-- Sticky Quick Navigation -->
-    <nav aria-label="Invitation sections" class="quicknav">
-      <a href="#panel-1">Open</a>
-      <a href="#panel-2">Invite</a>
-      <a href="#panel-3">Story</a>
-      <a href="#panel-4">Details</a>
-      <a href="#panel-5">Dress Code</a>
-      <a href="#panel-6">Gallery</a>
-      <a href="#rsvp-section">RSVP</a>
-      <a href="#panel-8">Countdown</a>
+    <nav class="app-nav" aria-label="Invitation Navigation">
+      <a href="#envelope">Open</a>
+      <a href="#invitation">Invite</a>
+      <a href="#story">Story</a>
+      <a href="#details">Details</a>
+      <a href="#dresscode">Dress Code</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#countdown">Countdown</a>
+      <a href="#rsvp">RSVP</a>
     </nav>
 
-    <main id="main-content">
-      <!-- ================= PANEL 1: ENVELOPE COVER ================= -->
-      <section aria-label="Envelope — Tap to Open" class="panel cover" id="panel-1">
-        <img
-          alt="Envelope — Tap to Open. Paul and Roselyn wedding, December 19, 2026."
-          class="panel-art"
-          loading="eager"
-          src="assets/images/panel-1.jpg"
-        />
-        <div class="seal-tap-cue" aria-hidden="true">
-          <span>Tap to Open</span>
-          <span class="down-arrow">↓</span>
+    <main>
+      <!-- ================= SECTION 1: 3D WAX SEAL ENVELOPE (HERO) ================= -->
+      <section class="envelope-hero" id="envelope" aria-label="Wedding Envelope">
+        <div class="envelope-wrapper">
+          <div class="envelope-box">
+            <div class="envelope-flap-decor" aria-hidden="true"></div>
+
+            <div class="envelope-header">
+              <div class="envelope-monogram-top">Paul &amp; Roselyn</div>
+              <div class="envelope-date-top">12 · 19 · 2026</div>
+            </div>
+
+            <!-- Animated Wax Seal Button -->
+            <div class="wax-seal-container">
+              <button class="wax-seal-btn" id="waxSealBtn" type="button" aria-label="Tap wax seal to open invitation">
+                <div class="wax-seal-inner">
+                  <span class="seal-monogram">P &amp; R</span>
+                  <svg class="seal-icon-botanical" viewBox="0 0 24 24">
+                    <path d="M12 2C12 2 11 7 8 10C5 13 2 14 2 14C2 14 6 15 9 13C12 11 12 8 12 8C12 8 12 11 15 13C18 15 22 14 22 14C22 14 19 13 16 10C13 7 12 2 12 2ZM11 14L11 22L13 22L13 14L11 14Z"/>
+                  </svg>
+                </div>
+              </button>
+
+              <div class="seal-cue-text" aria-hidden="true">
+                <span>Tap seal to open</span>
+                <span>↓</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <a aria-label="Tap wax seal to open invitation" class="hotspot open-seal" href="#panel-2"></a>
       </section>
 
-      <!-- ================= PANEL 2: MAIN INVITATION ================= -->
-      <section aria-label="Main Wedding Invitation" class="panel invitation" id="panel-2">
-        <img
-          alt="Main Wedding Invitation. Together with our families, we cordially invite you to the wedding of Paul &amp; Roselyn. December 19, 2026 at 9:00 AM, Our Lady of the Pillar Parish, Imus Cathedral, Cavite. Reception at Nathan's Catering and Events Services."
-          class="panel-art"
-          loading="eager"
-          src="assets/images/panel-2.jpg"
-        />
+      <!-- ================= SECTION 2: FORMAL INVITATION CARD ================= -->
+      <section class="invitation-card-section" id="invitation" aria-label="Formal Invitation">
+        <div class="invitation-frame">
+          <div class="invite-intro">
+            Together with our families<br />
+            We cordially invite you to celebrate the wedding of
+          </div>
+
+          <h1 class="couple-names">
+            Paul
+            <span class="couple-ampersand">&amp;</span>
+            Roselyn
+          </h1>
+
+          <div class="invite-date-badge">
+            <div class="invite-date-title">SATURDAY, DECEMBER 19, 2026</div>
+            <div class="invite-time-sub">Ceremony at 9:00 AM</div>
+          </div>
+
+          <div class="ornament-divider">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+            </svg>
+          </div>
+
+          <div class="venue-summary-box">
+            <div class="venue-summary-item">
+              <div class="venue-summary-label">Solemn Ceremony</div>
+              <div class="venue-summary-name">Our Lady of the Pillar Parish</div>
+              <div class="venue-summary-loc">Imus Cathedral · Imus, Cavite</div>
+            </div>
+
+            <div class="venue-summary-item">
+              <div class="venue-summary-label">Dinner Reception</div>
+              <div class="venue-summary-name">Nathan's Catering and Events Services</div>
+              <div class="venue-summary-loc">11:00 AM – 2:00 PM · Imus, Cavite</div>
+            </div>
+          </div>
+
+          <div class="romantic-quote">
+            “Two hearts. One journey. Forever.”
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="action-pills-row">
+            <button class="btn-pill primary" id="btnAddToCalendar" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              Add to Calendar
+            </button>
+            <a class="btn-pill secondary" href="#details">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+              View Map
+            </a>
+            <a class="btn-pill secondary" href="#rsvp">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              RSVP
+            </a>
+          </div>
+        </div>
       </section>
 
-      <!-- Quick Action Pill Bar -->
-      <div class="quick-action-bar">
-        <button class="action-pill-btn primary btn-open-calendar" type="button">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          Add to Calendar
-        </button>
-        <a class="action-pill-btn secondary" href="#venue-directions">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
-          Directions &amp; Map
-        </a>
-        <a class="action-pill-btn secondary" href="#rsvp-section">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          RSVP Now
-        </a>
-      </div>
+      <!-- ================= SECTION 3: OUR LITTLE STORY ================= -->
+      <section class="story-section" id="story" aria-label="Our Love Story">
+        <div class="section-tag">High School Sweethearts</div>
+        <h2 class="section-title">Our Little Story</h2>
 
-      <!-- ================= PANEL 3: OUR LITTLE STORY ================= -->
-      <section aria-label="Our Little Story" class="panel" id="panel-3">
-        <img
-          alt="Our Little Story. High school sweethearts to lifelong partners. After 9 years, we are finally saying I do. Paul and Roselyn."
-          class="panel-art"
-          loading="eager"
-          src="assets/images/panel-3.jpg"
-        />
-        <button aria-label="Upload custom story photo" class="photo-replace-zone story-photo" data-photo-zone="story-photo" type="button">
-          <img alt="" class="photo-replace-preview" />
-          <span class="upload-label">Change Photo</span>
-        </button>
+        <!-- Interactive Photo Box with Customizer -->
+        <div class="photo-interactive-card">
+          <img class="main-photo-view" id="story-photo" alt="Paul &amp; Roselyn Love Story" src="" />
+          <button class="photo-change-btn-overlay" data-photo-trigger="story-photo" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            Change Picture
+          </button>
+        </div>
+
+        <div class="story-text-card">
+          <p>
+            From high school sweethearts to lifelong partners, our journey has been filled with laughter, challenges, and endless love.
+          </p>
+          <p>
+            After 9 years, we are finally saying <em>"I do"</em> — not just to a day, but to a lifetime together. And we can't wait to celebrate this new chapter with the people who mean the most to us.
+          </p>
+          <div class="story-milestone-pill">9 Years Together · 2017 – 2026</div>
+        </div>
       </section>
 
-      <!-- ================= PANEL 4: THE WEDDING DETAILS ================= -->
-      <section aria-label="The Wedding Details" class="panel" id="panel-4">
-        <img
-          alt="The Wedding Details. Ceremony: 9:00 AM at Our Lady of the Pillar Parish, Imus Cathedral. Reception: 11:00 AM - 2:00 PM at Nathan's Catering and Events Services, Imus, Cavite."
-          class="panel-art"
-          loading="lazy"
-          src="assets/images/panel-4.jpg"
-        />
-        <a aria-label="Open venue map" class="hotspot map" href="#venue-directions"></a>
-        <button aria-label="Upload custom venue photo" class="photo-replace-zone venue-photo" data-photo-zone="venue-photo" type="button">
-          <img alt="" class="photo-replace-preview" />
-          <span class="upload-label">Change Photo</span>
-        </button>
-      </section>
+      <!-- ================= SECTION 4: WEDDING DETAILS & MAPS ================= -->
+      <section class="details-section" id="details" aria-label="Event Schedule and Venue">
+        <div class="section-tag">Schedule &amp; Venues</div>
+        <h2 class="section-title">The Wedding Details</h2>
 
-      <!-- Interactive Venue Navigation Card -->
-      <div class="venue-directions-card" id="venue-directions">
-        <h3>Location &amp; Directions</h3>
-        <div class="venues-grid">
-          <!-- Ceremony Venue -->
-          <div class="venue-box">
-            <span class="venue-type">Ceremony · 9:00 AM</span>
-            <h4>Imus Cathedral</h4>
-            <div class="venue-address">Our Lady of the Pillar Parish, Imus, Cavite</div>
-            <div class="venue-map-buttons">
-              <a
-                class="map-btn google"
-                href="https://www.google.com/maps/search/?api=1&amp;query=Our+Lady+of+the+Pillar+Parish+Imus+Cathedral+Imus+Cavite"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+        <div class="schedule-grid">
+          <!-- Ceremony Card -->
+          <div class="event-card">
+            <div class="event-icon-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h6M9 14h6M9 18h6"/></svg>
+            </div>
+            <span class="event-type-pill">Ceremony · 9:00 AM</span>
+            <h3 class="event-title">Our Lady of the Pillar Parish</h3>
+            <div class="event-time">Saturday · Dec 19, 2026 · 9:00 AM</div>
+            <div class="event-address">Imus Cathedral, Imus, Cavite, Philippines</div>
+            <div class="dual-map-buttons">
+              <a class="map-btn-link google" href="https://www.google.com/maps/search/?api=1&amp;query=Our+Lady+of+the+Pillar+Parish+Imus+Cathedral+Imus+Cavite" target="_blank" rel="noopener noreferrer">
                 Google Maps
               </a>
-              <a
-                class="map-btn waze"
-                href="https://waze.com/ul?q=Our+Lady+of+the+Pillar+Parish+Imus+Cathedral"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <a class="map-btn-link waze" href="https://waze.com/ul?q=Our+Lady+of+the+Pillar+Parish+Imus+Cathedral" target="_blank" rel="noopener noreferrer">
                 Waze
               </a>
             </div>
           </div>
 
-          <!-- Reception Venue -->
-          <div class="venue-box">
-            <span class="venue-type">Reception · 11:00 AM</span>
-            <h4>Nathan's Catering</h4>
-            <div class="venue-address">Nathan's Catering and Events Services, Imus, Cavite</div>
-            <div class="venue-map-buttons">
-              <a
-                class="map-btn google"
-                href="https://www.google.com/maps/search/?api=1&amp;query=Nathan's+Catering+and+Events+Services+Imus+Cavite"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+          <!-- Reception Card -->
+          <div class="event-card">
+            <div class="event-icon-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2v20M6 2v7a3 3 0 0 0 3 3v8M10 2v7M14 2v20M14 2a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4"/></svg>
+            </div>
+            <span class="event-type-pill">Reception · 11:00 AM</span>
+            <h3 class="event-title">Nathan's Catering &amp; Events</h3>
+            <div class="event-time">11:00 AM – 2:00 PM</div>
+            <div class="event-address">Nathan's Catering and Events Services, Imus, Cavite</div>
+            <div class="dual-map-buttons">
+              <a class="map-btn-link google" href="https://www.google.com/maps/search/?api=1&amp;query=Nathan's+Catering+and+Events+Services+Imus+Cavite" target="_blank" rel="noopener noreferrer">
                 Google Maps
               </a>
-              <a
-                class="map-btn waze"
-                href="https://waze.com/ul?q=Nathan's+Catering+and+Events+Services+Imus+Cavite"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
+              <a class="map-btn-link waze" href="https://waze.com/ul?q=Nathan's+Catering+and+Events+Services+Imus+Cavite" target="_blank" rel="noopener noreferrer">
                 Waze
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- ================= PANEL 5: DRESS CODE ================= -->
-      <section aria-label="Dress Code — Rustic Elegance" class="panel" id="panel-5">
-        <img
-          alt="Dress Code — Rustic Elegance. Color palette: Rust, Brown, Khaki, Beige/Cream. Attire: Ninong &amp; Ninang Barong, Formal dresses and suits."
-          class="panel-art"
-          loading="lazy"
-          src="assets/images/panel-5.jpg"
-        />
-        
-        <!-- Palette & Sponsor Attire Overlays -->
-        <div class="rust-only-top-fix" aria-label="Dress code colors for everyone attending">
-          <span class="rust-only-attending">For Everyone Attending</span>
-          <div class="palette-row">
-            <div class="palette-item" title="Rust #A64B2A">
-              <span class="palette-swatch rust-swatch"></span>
-              <span>RUST</span>
+      <!-- ================= SECTION 5: DRESS CODE ================= -->
+      <section class="dresscode-section" id="dresscode" aria-label="Dress Code Guidance">
+        <div class="section-tag">Attire Guide</div>
+        <h2 class="section-title">Dress Code — Rustic Elegance</h2>
+
+        <div class="palette-container">
+          <div class="palette-heading">Color Palette for Everyone Attending</div>
+
+          <div class="swatches-row">
+            <div class="swatch-card" data-color-name="Rust" data-color-hex="#A64B2A" title="Tap to copy hex code">
+              <div class="swatch-circle swatch-rust"></div>
+              <div class="swatch-name">RUST</div>
+              <div class="swatch-hex">#A64B2A</div>
             </div>
-            <div class="palette-item" title="Brown #874315">
-              <span class="palette-swatch brown-swatch"></span>
-              <span>BROWN</span>
+
+            <div class="swatch-card" data-color-name="Brown" data-color-hex="#874315" title="Tap to copy hex code">
+              <div class="swatch-circle swatch-brown"></div>
+              <div class="swatch-name">BROWN</div>
+              <div class="swatch-hex">#874315</div>
             </div>
-            <div class="palette-item" title="Khaki #CDB28A">
-              <span class="palette-swatch khaki-swatch"></span>
-              <span>KHAKI</span>
+
+            <div class="swatch-card" data-color-name="Khaki" data-color-hex="#CDB28A" title="Tap to copy hex code">
+              <div class="swatch-circle swatch-khaki"></div>
+              <div class="swatch-name">KHAKI</div>
+              <div class="swatch-hex">#CDB28A</div>
             </div>
-            <div class="palette-item" title="Beige / Cream #E9D8BB">
-              <span class="palette-swatch beige-swatch"></span>
-              <span>BEIGE / CREAM</span>
+
+            <div class="swatch-card" data-color-name="Beige / Cream" data-color-hex="#E9D8BB" title="Tap to copy hex code">
+              <div class="swatch-circle swatch-beige"></div>
+              <div class="swatch-name">BEIGE / CREAM</div>
+              <div class="swatch-hex">#E9D8BB</div>
+            </div>
+          </div>
+
+          <div class="attire-guidelines">
+            <div class="guideline-item">
+              <span class="guideline-badge">Ninong &amp; Ninang</span>
+              <div class="guideline-text">
+                <strong>Barong Tagalog</strong> for gentlemen sponsors · <strong>Formal Floor-length Gown</strong> in our rustic palette for ladies.
+              </div>
+            </div>
+
+            <div class="guideline-item">
+              <span class="guideline-badge">Guests</span>
+              <div class="guideline-text">
+                Formal or Semi-formal wear in warm autumn tones (suits, long dresses, barongs).
+              </div>
+            </div>
+
+            <div class="guideline-item">
+              <span class="guideline-badge" style="background:#555;">Note</span>
+              <div class="guideline-text">
+                Kindly reserve white and off-white attire for the bride. Please avoid casual denim or slippers.
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div aria-label="Barong instruction for ninong and ninang only" class="dresscode-text-fix">
-          <span>NINONG &amp; NINANG</span>
-          <span>BARONG</span>
+      <!-- ================= SECTION 6: PHOTO GALLERY ================= -->
+      <section class="gallery-section" id="gallery" aria-label="Photo Gallery">
+        <div class="section-tag">Captured Memories</div>
+        <h2 class="section-title">Our Memories Gallery</h2>
+
+        <div class="polaroid-grid">
+          <!-- Frame 1 -->
+          <div class="polaroid-frame">
+            <button class="gallery-upload-pill" data-photo-trigger="gallery-photo-1" type="button">Change Photo</button>
+            <div class="polaroid-img-wrap">
+              <img id="gallery-photo-1" alt="Paul &amp; Roselyn Gallery 1" src="" />
+            </div>
+            <div class="polaroid-caption">Where it all began</div>
+          </div>
+
+          <!-- Frame 2 -->
+          <div class="polaroid-frame">
+            <button class="gallery-upload-pill" data-photo-trigger="gallery-photo-2" type="button">Change Photo</button>
+            <div class="polaroid-img-wrap">
+              <img id="gallery-photo-2" alt="Paul &amp; Roselyn Gallery 2" src="" />
+            </div>
+            <div class="polaroid-caption">9 years of love</div>
+          </div>
+
+          <!-- Frame 3 -->
+          <div class="polaroid-frame">
+            <button class="gallery-upload-pill" data-photo-trigger="gallery-photo-3" type="button">Change Photo</button>
+            <div class="polaroid-img-wrap">
+              <img id="gallery-photo-3" alt="Paul &amp; Roselyn Gallery 3" src="" />
+            </div>
+            <div class="polaroid-caption">Same people, new chapter, forever.</div>
+          </div>
         </div>
       </section>
 
-      <!-- ================= PANEL 6: GALLERY ================= -->
-      <section aria-label="Photo Gallery" class="panel" id="panel-6">
-        <img
-          alt="Gallery. Same people, new chapter, forever. Paul and Roselyn photo memories."
-          class="panel-art"
-          loading="lazy"
-          src="assets/images/panel-6.jpg"
-        />
-        <button aria-label="Change photo 1" class="photo-replace-zone gallery-photo-one" data-photo-zone="gallery-photo-one" type="button">
-          <img alt="" class="photo-replace-preview" />
-          <span class="upload-label">Change Photo</span>
-        </button>
-        <button aria-label="Change photo 2" class="photo-replace-zone gallery-photo-two" data-photo-zone="gallery-photo-two" type="button">
-          <img alt="" class="photo-replace-preview" />
-          <span class="upload-label">Change Photo</span>
-        </button>
-        <button aria-label="Change photo 3" class="photo-replace-zone gallery-photo-three" data-photo-zone="gallery-photo-three" type="button">
-          <img alt="" class="photo-replace-preview" />
-          <span class="upload-label">Change Photo</span>
-        </button>
-      </section>
+      <!-- ================= SECTION 7: LIVE COUNTDOWN TICKER ================= -->
+      <section class="countdown-section" id="countdown" aria-label="Live Wedding Countdown">
+        <div class="section-tag" style="color:#e5c39b;">Mark Your Calendars</div>
+        <h2 class="section-title">Countdown to Our Wedding Day</h2>
 
-      <!-- ================= PANEL 7: RSVP TEASER ================= -->
-      <section aria-label="Kindly RSVP" class="panel" id="panel-7">
-        <img
-          alt="Kindly RSVP. Please confirm your attendance on or before December 1, 2026."
-          class="panel-art"
-          loading="lazy"
-          src="assets/images/panel-7.jpg"
-        />
-        <a aria-label="Jump to RSVP Form" class="hotspot rsvp" href="#rsvp-section"></a>
-        <div class="rsvp-instruction-fix">Please fill out the form below.</div>
-      </section>
-
-      <!-- ================= PANEL 8: COUNTDOWN ================= -->
-      <section aria-label="Countdown to Our Wedding Day" class="panel" id="panel-8">
-        <img
-          alt="Countdown to Our Wedding Day. December 19, 2026. The best thing to hold onto in life is each other."
-          class="panel-art"
-          loading="lazy"
-          src="assets/images/panel-8.jpg"
-        />
-        <!-- Live Ticking Countdown Overlay -->
-        <div aria-label="Live time remaining until the wedding" class="live-countdown" role="timer">
-          <span class="unit"><span class="num" id="cd-days">--</span><span class="label">Days</span></span>
-          <span class="colon">:</span>
-          <span class="unit"><span class="num" id="cd-hours">--</span><span class="label">Hrs</span></span>
-          <span class="colon">:</span>
-          <span class="unit"><span class="num" id="cd-minutes">--</span><span class="label">Mins</span></span>
-          <span class="colon">:</span>
-          <span class="unit"><span class="num" id="cd-seconds">--</span><span class="label">Secs</span></span>
+        <div class="countdown-cards-row" role="timer" aria-live="off">
+          <div class="countdown-card">
+            <div class="cd-digit" id="cdDays">--</div>
+            <div class="cd-label">Days</div>
+          </div>
+          <span class="cd-colon-divider">:</span>
+          <div class="countdown-card">
+            <div class="cd-digit" id="cdHours">--</div>
+            <div class="cd-label">Hours</div>
+          </div>
+          <span class="cd-colon-divider">:</span>
+          <div class="countdown-card">
+            <div class="cd-digit" id="cdMinutes">--</div>
+            <div class="cd-label">Mins</div>
+          </div>
+          <span class="cd-colon-divider">:</span>
+          <div class="countdown-card">
+            <div class="cd-digit" id="cdSeconds">--</div>
+            <div class="cd-label">Secs</div>
+          </div>
         </div>
+
+        <p class="countdown-quote">
+          “The best thing to hold onto in life is each other.”
+        </p>
       </section>
 
-      <!-- ================= PANEL 9: THANK YOU ================= -->
-      <section aria-label="Thank You" class="panel" id="panel-9">
-        <img
-          alt="Thank You for being a part of our special day. Paul &amp; Roselyn. 12.19.2026."
-          class="panel-art"
-          loading="lazy"
-          src="assets/images/panel-9.jpg"
-        />
-      </section>
+      <!-- ================= SECTION 8: WORKING RSVP ================= -->
+      <section class="rsvp-section" id="rsvp" aria-label="RSVP Response Form">
+        <div class="rsvp-box-card">
+          <div class="rsvp-header-center">
+            <span class="rsvp-deadline-badge">Response Requested</span>
+            <h2 class="section-title" style="margin-bottom:6px;">Kindly RSVP</h2>
+            <p style="font-family:var(--font-serif); font-size:15px; color:var(--brown-muted);">
+              Please confirm your attendance on or before <strong>December 1, 2026</strong>
+            </p>
+          </div>
 
-      <!-- ================= INTERACTIVE RSVP SECTION ================= -->
-      <section class="rsvp-section" id="rsvp-section">
-        <div class="rsvp-container">
-          <span class="rsvp-badge">Response Requested</span>
-          <h2>Kindly RSVP</h2>
-          <p class="rsvp-deadline">Please confirm your attendance on or before <strong>December 1, 2026</strong></p>
-
-          <form id="guest-rsvp" class="rsvp-form">
-            <div class="form-group">
-              <label for="guest-name">Your Full Name *</label>
-              <input autocomplete="name" id="guest-name" name="name" placeholder="Juan Dela Cruz" required type="text" />
+          <form id="rsvpForm">
+            <!-- Full Name -->
+            <div class="form-group-item">
+              <label for="rsvpName">Your Full Name *</label>
+              <input id="rsvpName" name="name" type="text" placeholder="e.g. Juan Dela Cruz" required autocomplete="name" />
             </div>
 
-            <div class="form-group">
-              <label for="attendance">Will You Attend? *</label>
-              <select id="attendance" name="attendance" required>
-                <option value="">Please select an option</option>
-                <option value="Joyfully Accepts">Joyfully Accepts</option>
-                <option value="Regretfully Declines">Regretfully Declines</option>
-              </select>
+            <!-- Attendance Choice -->
+            <div class="form-group-item">
+              <label>Will You Attend? *</label>
+              <div class="attendance-radio-group">
+                <label class="attendance-radio-card" id="cardAccepts">
+                  <input type="radio" name="attendance" value="Joyfully Accepts" required />
+                  <span>Joyfully Accepts</span>
+                </label>
+                <label class="attendance-radio-card" id="cardDeclines">
+                  <input type="radio" name="attendance" value="Regretfully Declines" required />
+                  <span>Regretfully Declines</span>
+                </label>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="guests">Total Number of Guests (Including You)</label>
-              <select id="guests" name="guests">
+            <!-- Guest Count -->
+            <div class="form-group-item">
+              <label for="rsvpGuests">Number of Guests (Including You)</label>
+              <select id="rsvpGuests" name="guests">
                 <option value="1">1 Person</option>
                 <option value="2">2 Persons</option>
                 <option value="3">3 Persons</option>
@@ -300,109 +373,180 @@
               </select>
             </div>
 
-            <div class="form-group">
-              <label for="message">Message for the Couple (Optional)</label>
-              <textarea id="message" name="message" placeholder="Leave a heartfelt message, well wishes, or dietary notes..." rows="3"></textarea>
+            <!-- Contact Number -->
+            <div class="form-group-item">
+              <label for="rsvpContact">Mobile / Contact Number (For Event Updates)</label>
+              <input id="rsvpContact" name="contact" type="tel" placeholder="e.g. 0917-123-4567" />
             </div>
 
-            <div class="form-buttons">
-              <button class="btn-rsvp-submit" type="submit">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.2.662.589 1.221.772 1.394.858.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-                Send via WhatsApp
-              </button>
-
-              <button class="btn-copy-messenger" id="copyMessengerBtn" type="button">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                Copy RSVP for Messenger / Viber
-              </button>
+            <!-- Message -->
+            <div class="form-group-item">
+              <label for="rsvpMessage">Message / Wishes for the Couple</label>
+              <textarea id="rsvpMessage" name="message" rows="3" placeholder="Leave a short message or note for Paul &amp; Roselyn..."></textarea>
             </div>
+
+            <!-- Working Submit Button -->
+            <button class="btn-submit-rsvp" id="btnSubmitRsvp" type="submit">
+              Send RSVP
+            </button>
           </form>
-
-          <p class="rsvp-note">
-            Your RSVP directly generates your response draft to send to the couple.
-          </p>
         </div>
       </section>
 
-      <!-- ================= GIFT OF LOVE REGISTRY ================= -->
-      <section class="registry-section">
-        <div class="registry-container">
-          <h3>Gift of Love</h3>
-          <p>
-            Your presence on our special day is the greatest blessing of all. Should you wish to honor us with a gift, a monetary contribution toward our new journey together would be warmly appreciated.
+      <!-- ================= SECTION 9: GIFT OF LOVE ================= -->
+      <section class="registry-section" id="gift" aria-label="Gift of Love">
+        <div class="registry-card">
+          <div class="section-tag">Blessing the Couple</div>
+          <h2 class="section-title">Gift of Love</h2>
+
+          <p class="registry-text">
+            Your presence at our wedding is the greatest blessing of all. Should you wish to honor us with a gift, a monetary contribution toward our new home and future together would be warmly appreciated.
           </p>
-          <button class="btn-show-registry" type="button">
-            View Gift Details (GCash / Bank)
-          </button>
+
+          <div class="account-box">
+            <div class="account-info">
+              <div class="account-service">GCash</div>
+              <div class="account-number">0917 123 4567</div>
+              <div class="account-holder">Roselyn M.</div>
+            </div>
+            <button class="btn-copy-acc" data-acc="09171234567" type="button">Copy</button>
+          </div>
+
+          <div class="account-box">
+            <div class="account-info">
+              <div class="account-service">BPI (Bank of the Philippine Islands)</div>
+              <div class="account-number">1234 5678 90</div>
+              <div class="account-holder">Paul D.</div>
+            </div>
+            <button class="btn-copy-acc" data-acc="1234567890" type="button">Copy</button>
+          </div>
         </div>
       </section>
     </main>
 
-    <!-- ================= FOOTER ================= -->
-    <footer class="site-footer">
-      <div class="couple-title">Paul &amp; Roselyn</div>
-      <div class="wedding-date">December 19, 2026 · Imus, Cavite</div>
-      <a class="back-to-top" href="#panel-1">Back to Top ↑</a>
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-names">Paul &amp; Roselyn</div>
+      <div>Saturday, December 19, 2026 · Imus Cathedral, Cavite</div>
+      <div style="margin-top: 6px; opacity: 0.7;">Forever Begins Here</div>
+
+      <button class="footer-admin-trigger" id="openAdminBtn" type="button">
+        Guest List &amp; Admin Dashboard
+      </button>
     </footer>
   </div>
 
-  <!-- ================= MODAL: ADD TO CALENDAR ================= -->
-  <div class="modal-overlay" id="calendarModal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle">
-    <div class="modal-card">
-      <button class="modal-close" aria-label="Close modal">&times;</button>
-      <h3 id="calModalTitle">Add to Calendar</h3>
-      <p>Save the date so you won't miss our celebration!</p>
+  <!-- ================= MODAL: RSVP SUCCESS CONFIRMATION ================= -->
+  <div class="app-modal" id="rsvpSuccessModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="app-modal-box">
+      <button class="app-modal-close" aria-label="Close dialog">&times;</button>
+      <div style="font-size:42px; margin-bottom:10px;">🎉</div>
+      <h3 id="successTitle" style="font-family:var(--font-display); font-size:20px; color:var(--rust); margin-bottom:6px;">
+        RSVP Confirmed!
+      </h3>
+      <p style="font-size:14px; color:var(--brown-mid); margin-bottom:14px;">
+        Thank you, <strong id="guestNameSuccess">Dear Guest</strong>!<br />
+        <span id="rsvpStatusSuccess" style="color:var(--rust-light); font-weight:600;"></span>
+      </p>
 
-      <div class="modal-options-grid">
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:18px;">
+        <a class="btn-pill primary" id="btnModalWhatsapp" href="#" target="_blank" rel="noopener noreferrer" style="justify-content:center;">
+          Share Confirmation on WhatsApp
+        </a>
+        <button class="btn-pill secondary app-modal-close" type="button" style="justify-content:center;">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CALENDAR OPTIONS ================= -->
+  <div class="app-modal" id="calendarModal" role="dialog" aria-modal="true" aria-labelledby="calTitle">
+    <div class="app-modal-box">
+      <button class="app-modal-close" aria-label="Close dialog">&times;</button>
+      <h3 id="calTitle" style="font-family:var(--font-display); font-size:18px; color:var(--brown-dark); margin-bottom:8px;">
+        Save the Date
+      </h3>
+      <p style="font-size:13px; color:var(--brown-muted); margin-bottom:18px;">
+        Add Paul &amp; Roselyn's wedding to your calendar:
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:10px;">
         <a
-          class="modal-btn google-cal"
+          class="btn-pill primary"
           href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Paul+%26+Roselyn+Wedding&amp;dates=20261219T010000Z/20261219T060000Z&amp;details=Paul+%26+Roselyn+Wedding+Ceremony+and+Reception.+Ceremony:+9:00+AM+at+Our+Lady+of+the+Pillar+Parish+(Imus+Cathedral).+Reception:+11:00+AM+-+2:00+PM+at+Nathan's+Catering+and+Events+Services.+Imus,+Cavite.&amp;location=Our+Lady+of+the+Pillar+Parish+Imus+Cathedral,+Imus,+Cavite"
-          rel="noopener noreferrer"
           target="_blank"
+          rel="noopener noreferrer"
+          style="justify-content:center; background:#4285f4;"
         >
           Google Calendar
         </a>
 
-        <button class="modal-btn apple-cal" id="downloadIcsBtn" type="button">
+        <button class="btn-pill secondary" id="downloadIcsBtn" type="button" style="justify-content:center;">
           Apple / Outlook (.ics Download)
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ================= MODAL: GIFT OF LOVE ================= -->
-  <div class="modal-overlay" id="registryModal" role="dialog" aria-modal="true" aria-labelledby="regModalTitle">
-    <div class="modal-card">
-      <button class="modal-close" aria-label="Close modal">&times;</button>
-      <h3 id="regModalTitle">Gift of Love</h3>
-      <p>Tap "Copy" to easily paste into your banking or GCash app.</p>
+  <!-- ================= MODAL: ADMIN DASHBOARD & GUEST LIST ================= -->
+  <div class="admin-modal-overlay" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <div class="admin-modal-card">
+      <button class="app-modal-close" aria-label="Close admin dashboard">&times;</button>
+      <h2 id="adminTitle" style="font-family:var(--font-display); font-size:20px; color:var(--brown-dark);">
+        RSVP Guest List &amp; Headcount
+      </h2>
+      <p style="font-size:12px; color:var(--brown-muted);">
+        Real-time guest responses for Paul &amp; Roselyn's Wedding
+      </p>
 
-      <div class="account-card">
-        <div class="bank-name">GCash</div>
-        <div class="acc-details">0917 123 4567</div>
-        <div class="acc-name">Roselyn M.</div>
-        <button class="btn-copy-acc" data-acc="09171234567" type="button">Copy</button>
+      <!-- Stats Summary -->
+      <div class="admin-stats-row">
+        <div class="admin-stat-box">
+          <div class="admin-stat-num" id="totalRsvpCount">0</div>
+          <div class="admin-stat-lbl">Total Responses</div>
+        </div>
+        <div class="admin-stat-box">
+          <div class="admin-stat-num" id="totalAttendingCount" style="color:#2e7d32;">0</div>
+          <div class="admin-stat-lbl">Attending Parties</div>
+        </div>
+        <div class="admin-stat-box">
+          <div class="admin-stat-num" id="totalHeadcount" style="color:#1565c0;">0</div>
+          <div class="admin-stat-lbl">Total Headcount</div>
+        </div>
       </div>
 
-      <div class="account-card">
-        <div class="bank-name">BPI (Bank of the Philippine Islands)</div>
-        <div class="acc-details">1234 5678 90</div>
-        <div class="acc-name">Paul D.</div>
-        <button class="btn-copy-acc" data-acc="1234567890" type="button">Copy</button>
+      <!-- Guest Table -->
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Guest Name</th>
+              <th>Status</th>
+              <th>Count</th>
+              <th>Contact</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="admin-actions-bar">
+        <button class="btn-pill primary" id="exportCsvBtn" type="button">
+          Export to CSV (Excel)
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- ================= LIGHTBOX MODAL ================= -->
-  <div class="lightbox-overlay" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Photo Lightbox">
-    <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">&times;</button>
-    <img alt="Expanded wedding photo" class="lightbox-img" id="lightboxImg" src="" />
-  </div>
-
-  <!-- Toast Notification Feedback -->
+  <!-- Toast Notice Container -->
   <div class="toast-notice" id="toastNotice" role="status" aria-live="polite"></div>
 
-  <!-- Main JavaScript Application -->
+  <!-- Application Logic -->
   <script src="assets/js/main.js"></script>
 </body>
 </html>
