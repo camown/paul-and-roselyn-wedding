@@ -28,64 +28,59 @@
   // ============================================================
   const envelopeHero = document.querySelector('.envelope-hero');
   const waxSealBtn = document.getElementById('waxSealBtn');
-  const appNav = document.getElementById('appNav');
 
-  // Crystalline Wedding Harp/Chime Synthesizer (Zero External Network Dependencies)
-  function playWeddingChime() {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      if (ctx.state === 'suspended') ctx.resume();
+  // Minimalist Navigation Drawer Controls
+  const menuToggleBtn = document.getElementById('menuToggleBtn');
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuCloseBtn = document.getElementById('menuCloseBtn');
+  const menuOverlayBackdrop = document.getElementById('menuOverlayBackdrop');
+  const menuLinkItems = document.querySelectorAll('.menu-link-item');
 
-      // Delicate D Major Harp Arpeggio: D4, F#4, A4, D5, F#5, A5
-      const notes = [293.66, 369.99, 440.00, 587.33, 739.99, 880.00];
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
-
-        gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.1);
-        gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + idx * 0.1 + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.1 + 1.2);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime + idx * 0.1);
-        osc.stop(ctx.currentTime + idx * 0.1 + 1.3);
-      });
-    } catch (err) {
-      // Audio is an optional delightful enhancement
-    }
+  function openMenu() {
+    if (menuOverlay) menuOverlay.classList.add('open');
   }
 
-  // Reveal Navigation when scrolling past envelope
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 200) {
-      if (appNav) appNav.classList.add('visible');
-    }
-  }, { passive: true });
+  function closeMenu() {
+    if (menuOverlay) menuOverlay.classList.remove('open');
+  }
+
+  if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
+  if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+  if (menuOverlayBackdrop) menuOverlayBackdrop.addEventListener('click', closeMenu);
+
+  menuLinkItems.forEach(item => {
+    item.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
 
   if (waxSealBtn && envelopeHero) {
     waxSealBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      
-      // Play gentle chime
-      playWeddingChime();
 
       // Trigger opening animation sequence
       envelopeHero.classList.add('opening');
-      if (appNav) appNav.classList.add('visible');
 
-      // Smooth scroll to the formal invitation card after opening animation
+      // Smooth scroll to display the full formal invitation card centered in viewport
       setTimeout(() => {
         const inviteSection = document.getElementById('invitation');
         if (inviteSection) {
-          inviteSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const rect = inviteSection.getBoundingClientRect();
+          const sectionTop = rect.top + window.pageYOffset;
+          const sectionHeight = inviteSection.offsetHeight;
+          const windowHeight = window.innerHeight;
+
+          // If the card fits within viewport, center it; otherwise align to top
+          const targetY = sectionHeight < windowHeight
+            ? sectionTop - (windowHeight - sectionHeight) / 2
+            : sectionTop;
+
+          window.scrollTo({
+            top: Math.max(0, targetY),
+            behavior: 'smooth'
+          });
         }
-      }, 850);
+      }, 700);
     });
   }
 
@@ -592,31 +587,8 @@
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.app-modal.open, .admin-modal-overlay.open, .dev-drawer-backdrop.open').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.app-modal.open, .admin-modal-overlay.open, .dev-drawer-backdrop.open, .menu-overlay.open').forEach(m => m.classList.remove('open'));
     }
   });
-
-  // ============================================================
-  // 11. Active Nav Link on Scroll
-  // ============================================================
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.app-nav a');
-
-  window.addEventListener('scroll', () => {
-    const scrollPos = window.pageYOffset + 120;
-    sections.forEach(sec => {
-      const top = sec.offsetTop;
-      const height = sec.offsetHeight;
-      const id = sec.getAttribute('id');
-      if (scrollPos >= top && scrollPos < top + height) {
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === '#' + id) {
-            link.classList.add('active');
-          }
-        });
-      }
-    });
-  }, { passive: true });
 
 })();

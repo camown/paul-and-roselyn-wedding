@@ -34,19 +34,75 @@
     <span class="dev-badge-tiny">DEV</span>
   </button>
 
-  <div class="invite-app">
-    <!-- Sticky Quick Navigation (Initially Hidden on Envelope Landing) -->
-    <nav class="app-nav" id="appNav" aria-label="Invitation Navigation">
-      <a href="#envelope">Envelope</a>
-      <a href="#invitation">Invite</a>
-      <a href="#story">Story</a>
-      <a href="#details">Details</a>
-      <a href="#dresscode">Dress Code</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#countdown">Countdown</a>
-      <a href="#rsvp">RSVP</a>
-    </nav>
+  <!-- Minimalist Corner Floating Menu Toggle (Option 3) -->
+  <button class="menu-toggle-btn" id="menuToggleBtn" type="button" aria-label="Open navigation menu">
+    <span class="menu-burger-box">
+      <span class="menu-burger-line"></span>
+      <span class="menu-burger-line"></span>
+      <span class="menu-burger-line"></span>
+    </span>
+    <span class="menu-btn-label">MENU</span>
+  </button>
 
+  <!-- Romantic Minimalist Navigation Drawer / Overlay -->
+  <div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Wedding Menu">
+    <div class="menu-overlay-backdrop" id="menuOverlayBackdrop"></div>
+    <div class="menu-overlay-panel">
+      <div class="menu-overlay-header">
+        <div class="menu-monogram">P &amp; R</div>
+        <button class="menu-close-btn" id="menuCloseBtn" type="button" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="menu-wedding-title">Paul &amp; Roselyn</div>
+      <div class="menu-wedding-sub">Saturday, December 19, 2026</div>
+
+      <div class="menu-divider-gold"></div>
+
+      <nav class="menu-links-list">
+        <a class="menu-link-item" href="#envelope">
+          <span class="menu-link-num">01</span>
+          <span class="menu-link-text">Envelope Landing</span>
+        </a>
+        <a class="menu-link-item" href="#invitation">
+          <span class="menu-link-num">02</span>
+          <span class="menu-link-text">Formal Invitation</span>
+        </a>
+        <a class="menu-link-item" href="#story">
+          <span class="menu-link-num">03</span>
+          <span class="menu-link-text">Our Love Story</span>
+        </a>
+        <a class="menu-link-item" href="#details">
+          <span class="menu-link-num">04</span>
+          <span class="menu-link-text">Schedule &amp; Venues</span>
+        </a>
+        <a class="menu-link-item" href="#dresscode">
+          <span class="menu-link-num">05</span>
+          <span class="menu-link-text">Dress Code &amp; Palette</span>
+        </a>
+        <a class="menu-link-item" href="#gallery">
+          <span class="menu-link-num">06</span>
+          <span class="menu-link-text">Captured Memories</span>
+        </a>
+        <a class="menu-link-item" href="#countdown">
+          <span class="menu-link-num">07</span>
+          <span class="menu-link-text">Wedding Countdown</span>
+        </a>
+        <a class="menu-link-item menu-rsvp-pill" href="#rsvp">
+          <span class="menu-link-num">08</span>
+          <span class="menu-link-text">Kindly RSVP</span>
+        </a>
+        <a class="menu-link-item" href="#gift">
+          <span class="menu-link-num">09</span>
+          <span class="menu-link-text">Gift of Love</span>
+        </a>
+      </nav>
+
+      <div class="menu-footer-note">
+        Imus Cathedral · Cavite, Philippines
+      </div>
+    </div>
+  </div>
+
+  <div class="invite-app">
     <main>
       <!-- ================= SECTION 1: 3D WAX SEAL ENVELOPE (HERO LANDING) ================= -->
       <section class="envelope-hero" id="envelope" aria-label="Wedding Envelope">
@@ -168,19 +224,21 @@
         <div class="section-tag">High School Sweethearts</div>
         <h2 class="section-title">Our Little Story</h2>
 
-        <!-- Interactive Photo Box with Customizer -->
-        <div class="photo-interactive-card">
-          <img class="main-photo-view" id="story-photo" alt="Paul &amp; Roselyn Love Story" src="" />
-        </div>
+        <div class="story-content-wrap">
+          <!-- Interactive Photo Box with Customizer -->
+          <div class="photo-interactive-card">
+            <img class="main-photo-view" id="story-photo" alt="Paul &amp; Roselyn Love Story" src="" />
+          </div>
 
-        <div class="story-text-card">
-          <p>
-            From high school sweethearts to lifelong partners, our journey has been filled with laughter, challenges, and endless love.
-          </p>
-          <p>
-            After 9 years, we are finally saying <em>"I do"</em> — not just to a day, but to a lifetime together. And we can't wait to celebrate this new chapter with the people who mean the most to us.
-          </p>
-          <div class="story-milestone-pill">9 Years Together · 2017 – 2026</div>
+          <div class="story-text-card">
+            <p>
+              From high school sweethearts to lifelong partners, our journey has been filled with laughter, challenges, and endless love.
+            </p>
+            <p>
+              After 9 years, we are finally saying <em>"I do"</em> — not just to a day, but to a lifetime together. And we can't wait to celebrate this new chapter with the people who mean the most to us.
+            </p>
+            <div class="story-milestone-pill">9 Years Together · 2017 – 2026</div>
+          </div>
         </div>
       </section>
 
@@ -264,36 +322,38 @@
             </div>
           </div>
 
-          <!-- Illustrated Attire Guide -->
-          <div class="attire-illustration-box">
-            <img class="attire-illustration-img" src="assets/images/wedding-attire-illustrations.jpg" alt="Wedding Attire Guidelines: Ninang Gown, Ninong Suit, Guest Cocktail Dress, Barong Tagalog" />
-            <div class="attire-labels-grid">
-              <div class="attire-label-col">Ninang Gown</div>
-              <div class="attire-label-col">Ninong Suit</div>
-              <div class="attire-label-col">Guest Dress</div>
-              <div class="attire-label-col">Barong Tagalog</div>
-            </div>
-          </div>
-
-          <div class="attire-guidelines">
-            <div class="guideline-item">
-              <span class="guideline-badge">Ninong &amp; Ninang</span>
-              <div class="guideline-text">
-                <strong>Barong Tagalog</strong> for gentlemen sponsors · <strong>Formal Floor-length Gown</strong> in our rustic palette for ladies.
+          <!-- Illustrated Attire Guide & Guidelines Grid -->
+          <div class="dresscode-grid-wrap">
+            <div class="attire-illustration-box">
+              <img class="attire-illustration-img" src="assets/images/wedding-attire-illustrations.jpg" alt="Wedding Attire Guidelines: Ninang Gown, Ninong Suit, Guest Cocktail Dress, Barong Tagalog" />
+              <div class="attire-labels-grid">
+                <div class="attire-label-col">Ninang Gown</div>
+                <div class="attire-label-col">Ninong Suit</div>
+                <div class="attire-label-col">Guest Dress</div>
+                <div class="attire-label-col">Barong Tagalog</div>
               </div>
             </div>
 
-            <div class="guideline-item">
-              <span class="guideline-badge">Guests</span>
-              <div class="guideline-text">
-                Formal or Semi-formal wear in warm autumn tones (suits, long dresses, barongs).
+            <div class="attire-guidelines">
+              <div class="guideline-item">
+                <span class="guideline-badge">Ninong &amp; Ninang</span>
+                <div class="guideline-text">
+                  <strong>Barong Tagalog</strong> for gentlemen sponsors · <strong>Formal Floor-length Gown</strong> in our rustic palette for ladies.
+                </div>
               </div>
-            </div>
 
-            <div class="guideline-item">
-              <span class="guideline-badge" style="background:#555;">Note</span>
-              <div class="guideline-text">
-                Kindly reserve white and off-white attire for the bride. Please avoid casual denim or slippers.
+              <div class="guideline-item">
+                <span class="guideline-badge">Guests</span>
+                <div class="guideline-text">
+                  Formal or Semi-formal wear in warm autumn tones (suits, long dresses, barongs).
+                </div>
+              </div>
+
+              <div class="guideline-item">
+                <span class="guideline-badge" style="background:#555;">Note</span>
+                <div class="guideline-text">
+                  Kindly reserve white and off-white attire for the bride. Please avoid casual denim or slippers.
+                </div>
               </div>
             </div>
           </div>
@@ -378,54 +438,58 @@
           </div>
 
           <form id="rsvpForm">
-            <!-- Full Name -->
-            <div class="form-group-item">
-              <label for="rsvpName">Your Full Name *</label>
-              <input id="rsvpName" name="name" type="text" placeholder="e.g. Juan Dela Cruz" required autocomplete="name" />
-            </div>
+            <div class="rsvp-form-grid">
+              <!-- Full Name -->
+              <div class="form-group-item">
+                <label for="rsvpName">Your Full Name *</label>
+                <input id="rsvpName" name="name" type="text" placeholder="e.g. Juan Dela Cruz" required autocomplete="name" />
+              </div>
 
-            <!-- Attendance Choice -->
-            <div class="form-group-item">
-              <label>Will You Attend? *</label>
-              <div class="attendance-radio-group">
-                <label class="attendance-radio-card" id="cardAccepts">
-                  <input type="radio" name="attendance" value="Joyfully Accepts" required />
-                  <span>Joyfully Accepts</span>
-                </label>
-                <label class="attendance-radio-card" id="cardDeclines">
-                  <input type="radio" name="attendance" value="Regretfully Declines" required />
-                  <span>Regretfully Declines</span>
-                </label>
+              <!-- Attendance Choice -->
+              <div class="form-group-item">
+                <label>Will You Attend? *</label>
+                <div class="attendance-radio-group">
+                  <label class="attendance-radio-card" id="cardAccepts">
+                    <input type="radio" name="attendance" value="Joyfully Accepts" required />
+                    <span>Joyfully Accepts</span>
+                  </label>
+                  <label class="attendance-radio-card" id="cardDeclines">
+                    <input type="radio" name="attendance" value="Regretfully Declines" required />
+                    <span>Regretfully Declines</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Guest Count -->
+              <div class="form-group-item">
+                <label for="rsvpGuests">Number of Guests (Including You)</label>
+                <select id="rsvpGuests" name="guests">
+                  <option value="1">1 Person</option>
+                  <option value="2">2 Persons</option>
+                  <option value="3">3 Persons</option>
+                  <option value="4">4 Persons</option>
+                </select>
+              </div>
+
+              <!-- Contact Number -->
+              <div class="form-group-item">
+                <label for="rsvpContact">Mobile / Contact Number (For Updates)</label>
+                <input id="rsvpContact" name="contact" type="tel" placeholder="e.g. 0917-123-4567" />
+              </div>
+
+              <!-- Message -->
+              <div class="form-group-item rsvp-form-full">
+                <label for="rsvpMessage">Message / Wishes for the Couple</label>
+                <textarea id="rsvpMessage" name="message" rows="3" placeholder="Leave a short message or note for Paul &amp; Roselyn..."></textarea>
+              </div>
+
+              <!-- Working Submit Button -->
+              <div class="rsvp-form-full">
+                <button class="btn-submit-rsvp" id="btnSubmitRsvp" type="submit">
+                  Send RSVP
+                </button>
               </div>
             </div>
-
-            <!-- Guest Count -->
-            <div class="form-group-item">
-              <label for="rsvpGuests">Number of Guests (Including You)</label>
-              <select id="rsvpGuests" name="guests">
-                <option value="1">1 Person</option>
-                <option value="2">2 Persons</option>
-                <option value="3">3 Persons</option>
-                <option value="4">4 Persons</option>
-              </select>
-            </div>
-
-            <!-- Contact Number -->
-            <div class="form-group-item">
-              <label for="rsvpContact">Mobile / Contact Number (For Event Updates)</label>
-              <input id="rsvpContact" name="contact" type="tel" placeholder="e.g. 0917-123-4567" />
-            </div>
-
-            <!-- Message -->
-            <div class="form-group-item">
-              <label for="rsvpMessage">Message / Wishes for the Couple</label>
-              <textarea id="rsvpMessage" name="message" rows="3" placeholder="Leave a short message or note for Paul &amp; Roselyn..."></textarea>
-            </div>
-
-            <!-- Working Submit Button -->
-            <button class="btn-submit-rsvp" id="btnSubmitRsvp" type="submit">
-              Send RSVP
-            </button>
           </form>
         </div>
       </section>
@@ -440,22 +504,24 @@
             Your presence at our wedding is the greatest blessing of all. Should you wish to honor us with a gift, a monetary contribution toward our new home and future together would be warmly appreciated.
           </p>
 
-          <div class="account-box">
-            <div class="account-info">
-              <div class="account-service">GCash</div>
-              <div class="account-number">0917 123 4567</div>
-              <div class="account-holder">Roselyn M.</div>
+          <div class="accounts-grid">
+            <div class="account-box">
+              <div class="account-info">
+                <div class="account-service">GCash</div>
+                <div class="account-number">0917 123 4567</div>
+                <div class="account-holder">Roselyn M.</div>
+              </div>
+              <button class="btn-copy-acc" data-acc="09171234567" type="button">Copy</button>
             </div>
-            <button class="btn-copy-acc" data-acc="09171234567" type="button">Copy</button>
-          </div>
 
-          <div class="account-box">
-            <div class="account-info">
-              <div class="account-service">BPI (Bank of the Philippine Islands)</div>
-              <div class="account-number">1234 5678 90</div>
-              <div class="account-holder">Paul D.</div>
+            <div class="account-box">
+              <div class="account-info">
+                <div class="account-service">BPI (Bank of the Philippine Islands)</div>
+                <div class="account-number">1234 5678 90</div>
+                <div class="account-holder">Paul D.</div>
+              </div>
+              <button class="btn-copy-acc" data-acc="1234567890" type="button">Copy</button>
             </div>
-            <button class="btn-copy-acc" data-acc="1234567890" type="button">Copy</button>
           </div>
         </div>
       </section>
