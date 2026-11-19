@@ -57,6 +57,26 @@ async function openLiveCamera(page) {
   ).toBeEnabled();
 }
 
+test("optional Supabase client reuses its instance without creating a guest account", async ({ page }) => {
+  let signups = 0;
+  page.on("request", request => { if (request.url().includes("/auth/v1/signup")) signups++; });
+  await prepare(page);
+  await enter(page);
+  const result = await page.evaluate(async () => {
+    const { getSupabaseClient } = await import("/assets/js/supabase.mjs");
+    const client = getSupabaseClient();
+    if (!client) return { configured: false };
+    const { data, error } = await client.auth.getSession();
+    return { configured: true, singleton: client === getSupabaseClient(), session: data.session, error: error?.message ?? null };
+  });
+  if (result.configured) {
+    expect(result.singleton).toBe(true);
+    expect(result.session).toBeNull();
+    expect(result.error).toBeNull();
+  }
+  expect(signups).toBe(0);
+});
+
 test("the day before: device-date spoofing cannot expose camera controls or request permission", async ({
   page,
 }) => {

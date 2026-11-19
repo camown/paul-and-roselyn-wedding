@@ -13,7 +13,8 @@
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node scripts/run-browser-tests.mjs",
-    "check": "npm run build && npm test"
+    "check": "npm run build && npm test",
+    "supabase:check": "node --env-file-if-exists=.env.local scripts/check-supabase.mjs"
   },
   "keywords": [
     "wedding-invitation",
@@ -28,6 +29,7 @@
     "vite": "^8.3.8"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
     "fflate": "^0.8.3"
   }
 }

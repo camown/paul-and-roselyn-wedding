@@ -1,7 +1,8 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { eventStatus } from "./shared/event-window.mjs";
+import { readSupabaseConfig } from "./shared/supabase-config.mjs";
 
 // Deliberately available only on the loopback development server, never in a build.
 const photoEditor = {
@@ -98,8 +99,12 @@ const photoEditor = {
     });
   },
 };
-export default defineConfig({
-  plugins: [photoEditor],
-  server: { host: "127.0.0.1", port: 3000, strictPort: true },
-  build: { target: "es2022" },
+export default defineConfig(({ mode }) => {
+  // Catch incomplete/privileged public credentials before serving or deploying.
+  readSupabaseConfig({ ...loadEnv(mode, process.cwd(), "VITE_"), ...process.env });
+  return {
+    plugins: [photoEditor],
+    server: { host: "127.0.0.1", port: 3000, strictPort: true },
+    build: { target: "es2022" },
+  };
 });

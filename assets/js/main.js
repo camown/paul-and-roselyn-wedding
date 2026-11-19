@@ -8,6 +8,9 @@ import { createEventClock } from "./event-clock.mjs";
 import { FILM_LIMIT, filmIsDeveloped, recordFilmExposure } from "./film.mjs";
 import { createCalendar } from "./calendar.mjs";
 import { createPreviewArchive } from "./export.mjs";
+import { getSupabaseClient } from "./supabase.mjs";
+// Initialize the optional host-session client without creating a user or sending guest data.
+getSupabaseClient();
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const paths = {

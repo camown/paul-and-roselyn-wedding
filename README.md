@@ -42,9 +42,9 @@ See [architecture](docs/architecture.md), [design research](docs/design-research
 
 Recommended: private invitation links, invisible guest sessions, host sign-in, invitation seat limits, server-enforced 24-shot rolls, private Supabase Storage, moderated delayed album, and explicit export/retention. Vercel hosts the frontend and server APIs. No guest app or password is required.
 
-**The cloud backend is not connected.** Host authentication/dashboard, invitation provisioning/redemption, durable RSVPs, signed uploads, media processing, moderation, rate limiting and cleanup remain production integration work. The old public/in-memory RSVP endpoint now fails closed with HTTP 503, instead of exposing guest information or claiming saves.
+**The guest data backend is not connected.** The public Supabase browser client is configured for project `vmstqqfmwkisyzwrlftw` in ignored `.env.local`; run `npm run supabase:check` for a read-only connection check. Vercel needs `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` (see `.env.example`), rather than the Next.js quickstart's `NEXT_PUBLIC_` names. The client supports host-session persistence/refresh but does not create accounts or send guest data. Host login/dashboard, invitation provisioning/redemption, durable RSVPs, signed uploads, media processing, moderation, rate limiting and cleanup remain production integration work. The old public/in-memory RSVP endpoint fails closed with HTTP 503, instead of exposing guest information or claiming saves.
 
-No live Supabase project has been created or migrated, and nothing has been deployed to Vercel. Set up the user's account connection when cloud integration begins; do not put service secrets in frontend code or chat. Review the staged release gates in the architecture document before distribution.
+The user has created a Supabase project and authenticated the Codex MCP connection; the schema has not yet been migrated, and nothing has been deployed to Vercel by this agent. Do not put service secrets in frontend code or chat. Review the staged release gates in the architecture document before distribution.
 
 ## Project layout
 
