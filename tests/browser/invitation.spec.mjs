@@ -249,6 +249,35 @@ test("opening, replay and mobile navigation work by keyboard and touch", async (
   await expect(page.locator("#invitation-gate")).not.toBeVisible();
 });
 
+test("restyled invitation controls remain usable on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await prepare(page);
+  await enter(page);
+  const calendar = page.waitForEvent("download");
+  await page.locator("#calendar-button").click();
+  expect((await calendar).suggestedFilename()).toMatch(/\.ics$/);
+  await page.getByRole("button", { name: "Enlarge our first memory", exact: true }).click();
+  await expect(page.locator("#photo-dialog")).toBeVisible();
+  await page.getByRole("button", { name: "Close enlarged photo", exact: true }).click();
+  for (const summary of await page.locator(".questions summary").all()) {
+    await summary.click();
+    await expect(summary.locator("..")).toHaveAttribute("open", "");
+    await summary.click();
+  }
+  await page.getByLabel("Your name", { exact: true }).fill("Test Guest");
+  await page.getByLabel("Joyfully accepts", { exact: true }).check();
+  await page.getByLabel("Seats in your invitation", { exact: true }).selectOption("2");
+  await page.getByRole("button", { name: "Save preview reply", exact: true }).click();
+  await expect(page.locator("#rsvp-status")).toContainText("2 guests is saved on this device only");
+  await page.getByLabel("Regretfully declines", { exact: true }).check();
+  await expect(page.locator("#attending-fields")).not.toBeVisible();
+  await page.getByRole("button", { name: "Update preview reply", exact: true }).click();
+  await expect(page.locator("#rsvp-status")).toContainText("decline is saved on this device only");
+  await page.reload();
+  await expect(page.getByLabel("Your name", { exact: true })).toHaveValue("Test Guest");
+  await expect(page.getByLabel("Regretfully declines", { exact: true })).toBeChecked();
+});
+
 for (const [width, height] of [
   [320, 720],
   [390, 844],
@@ -266,16 +295,29 @@ for (const [width, height] of [
         client: document.documentElement.clientWidth,
         scroll: document.documentElement.scrollWidth,
         fontLoaded: document.fonts.check("80px Italianno"),
+        serifLoaded: document.fonts.check('40px "Bodoni Moda"'),
+        serifFamily: getComputedStyle(document.querySelector(".story h2")).fontFamily,
+        sectionsFit: [...document.querySelectorAll("main > section")].every(section => section.scrollWidth <= section.clientWidth),
         photoBottom: document
           .querySelector(".hero-photo")
           .getBoundingClientRect().bottom,
       }));
       expect(result.scroll).toBeLessThanOrEqual(result.client);
       expect(result.fontLoaded).toBe(true);
+      expect(result.serifLoaded).toBe(true);
+      expect(result.serifFamily).toContain("Bodoni Moda");
+      expect(result.sectionsFit).toBe(true);
       if (width <= 390) expect(result.photoBottom).toBeLessThan(height);
       await expect(page.locator("[data-camera-header]")).not.toBeVisible();
       await page.screenshot({
         path: "docs/screenshots/calligraphy-landing-" + width + ".png",
       });
+      if (width === 390 || width === 1440) {
+        for (const id of ["story", "details", "attire", "memories", "rsvp"]) {
+          await page.locator("#" + id).scrollIntoViewIfNeeded();
+          await page.screenshot({ path: "docs/screenshots/suite-" + id + "-" + width + ".jpg", quality: 85 });
+        }
+        await page.screenshot({ path: "docs/screenshots/suite-full-" + width + ".jpg", fullPage: true, quality: 80 });
+      }
     },
   );

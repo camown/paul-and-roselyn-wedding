@@ -25,7 +25,7 @@ The Vite development server provides `/api/event-status`; Vercel will use `api/e
 
 ## Implemented locally
 
-- Rust silk and floral stationery, self-hosted Italianno calligraphy, responsive layouts and native dialogs.
+- Coordinated rust silk and embossed floral stationery across the entire invitation, self-hosted Bodoni Moda / Italianno / DM Sans, responsive layouts and native dialogs.
 - Wedding schedule, Google Maps/Waze links, downloadable calendar invitation, dress palette and photo lightboxes.
 - Editable **preview** RSVP stored in IndexedDB; acceptance, decline and seat selection. This is not delivered to the couple.
 - Capture-only disposable camera: 24 exposures, compressed JPEGs, no library imports, retakes or individual deletion. Capture opens only on 19 December 2026, midnight to midnight Philippine time. Server time anchors the UI and local write guard; stale or unavailable time keeps capture locked. Frames stay concealed until 20 December at noon Philippine time in a separate viewer. No photo is sent to a cloud service.
