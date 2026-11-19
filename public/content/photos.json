@@ -1,5 +1,10 @@
 {
   "hero": "/content/hero.jpg",
   "opening-eb2a7ec0-9eb1-460e-ae6b-98a4ebc024d9": "/content/opening-eb2a7ec0-9eb1-460e-ae6b-98a4ebc024d9.jpg",
-  "keepsake": "/content/keepsake.jpg"
+  "keepsake": "/content/keepsake.jpg",
+  "opening-7412c645-4947-4365-8a4e-ef4922e9be02": "/content/opening-7412c645-4947-4365-8a4e-ef4922e9be02.jpg",
+  "story": "/content/story.jpg",
+  "gallery1": "/content/gallery1.jpg",
+  "gallery2": "/content/gallery2.jpg",
+  "gallery3": "/content/gallery3.jpg"
 }
