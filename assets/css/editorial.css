@@ -1,0 +1,963 @@
+/* Photographed stationery composition: compact invitation + layered memories. */
+.site-header {
+  height: 82px;
+  margin: 0;
+  padding: 0 5.5%;
+  background: #632c21;
+  border-color: #d8b58a40;
+}
+.hero {
+  background: #632c21 url("../images/rust-silk-atelier.jpg") center/cover
+    no-repeat;
+  max-width: none;
+  min-height: calc(100svh - 82px);
+  padding: 75px 9% 105px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10%;
+  align-items: center;
+  overflow: hidden;
+}
+.hero:before,
+.hero:after {
+  display: none;
+}
+.hero-copy {
+  background: #713323ed;
+  padding: 40px 35px 36px;
+  border: 1px solid #dfba8790;
+  outline: 1px solid #dfba8740;
+  outline-offset: 8px;
+  box-shadow: 0 18px 48px #2e100d40;
+  text-align: center;
+}
+.hero-copy > .eyebrow {
+  font-size: 9px;
+  letter-spacing: 2.7px;
+  line-height: 1.6;
+  margin: 0 0 22px;
+}
+.hero .wedding-crest {
+  width: 49px;
+  height: 46px;
+  margin: 0 auto 28px;
+  outline-offset: 4px;
+}
+.hero .wedding-crest span {
+  font-size: 20px;
+}
+.hero .wedding-crest em {
+  font-size: 14px;
+}
+.hero .wedding-crest:before,
+.hero .wedding-crest:after {
+  width: 30px;
+}
+.hero h1 {
+  font-size: clamp(88px, 8.4vw, 133px);
+  line-height: 0.85;
+  letter-spacing: -3px;
+  margin: 0 0 24px;
+}
+.hero h1 .ampersand {
+  font-size: 0.48em;
+  display: inline;
+  margin: 0 3px;
+}
+.hero h1 br {
+  display: block;
+}
+.hero-invite {
+  font: italic 23px/1.5 var(--serif);
+  margin-top: 10px;
+  color: #f0d8c2;
+}
+.hero-date {
+  margin: 22px 0 25px;
+  justify-content: center;
+  gap: 14px;
+}
+.hero-date > span {
+  font-size: 47px;
+  padding-right: 14px;
+}
+.hero-date > div {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.hero-date div > span {
+  font-size: 8px;
+  letter-spacing: 0.9px;
+}
+.hero .button {
+  background: #f1ddbd;
+  color: #6b3022;
+  border: 1px solid #f4dfc0;
+  min-width: 225px;
+  font-size: 12px;
+}
+.hero .button:hover {
+  background: #fff2df;
+  color: #6b3022;
+}
+.hero-scroll {
+  display: none;
+}
+.hero-photo {
+  width: min(100%, 455px);
+  justify-self: center;
+  background: #f0e1c9;
+  padding: 11px 11px 7px;
+  outline: 0;
+  border: 0;
+  border-radius: 1px;
+  margin: 0;
+  transform: rotate(-4deg);
+  box-shadow: 8px 20px 45px #2d100c66;
+  position: relative;
+  isolation: isolate;
+}
+.hero-photo > img {
+  width: 100%;
+  height: 510px;
+  min-height: 0;
+  max-height: none;
+  border-radius: 0;
+  object-fit: cover;
+  object-position: 50% 38%;
+  filter: saturate(0.85);
+}
+.hero-photo:before {
+  content: "";
+  position: absolute;
+  inset: -18px 12px 12px -16px;
+  background: #ac6a4a;
+  transform: rotate(6deg);
+  z-index: -1;
+  border: 1px solid #d4a279;
+  box-shadow: 0 7px 16px #2b120d44;
+}
+.hero-photo:after {
+  display: none;
+}
+.hero-photo figcaption {
+  font: italic 21px/1.3 var(--serif);
+  text-transform: none;
+  letter-spacing: 0;
+  color: #75432f;
+  padding: 13px 8px 5px;
+  align-items: center;
+  gap: 10px;
+}
+.hero-photo figcaption > span:last-child {
+  font: 9px var(--sans);
+  letter-spacing: 1.8px;
+}
+.hero .photo-stamp {
+  display: none;
+}
+.hero-memento {
+  position: absolute;
+  right: -63px;
+  bottom: -57px;
+  width: 170px;
+  padding: 7px 7px 10px;
+  background: #f3e6d2;
+  transform: rotate(14deg);
+  box-shadow: 4px 7px 25px #2b100c66;
+  color: #75432f;
+  border: 1px solid #cdb692;
+}
+.hero-memento > img {
+  width: 100%;
+  height: 165px;
+  object-fit: cover;
+  filter: saturate(0.72);
+}
+.hero-memento > span {
+  display: block;
+  text-align: center;
+  font: italic 17px/1.4 var(--serif);
+  padding-top: 8px;
+}
+.hero-side-note {
+  display: none;
+}
+.date-ribbon {
+  margin: 0;
+  border-block-color: #dfba8760;
+  background: #58271e;
+  padding: 14px 25px;
+}
+.invitation-gate {
+  background: #632c21 url("../images/rust-silk-atelier.jpg") center/cover
+    no-repeat;
+}
+.invitation-art {
+  display: none;
+}
+.invitation-opening {
+  max-width: 850px;
+  background: #6d3022e8;
+  padding: 38px 40px 30px;
+  border-color: #e0ba8780;
+  outline-color: #e0ba8750;
+  box-shadow: 0 20px 70px #2d0f0b66;
+}
+.invitation-opening:before {
+  width: 140px;
+  height: 31px;
+  margin-bottom: 20px;
+}
+.invitation-opening h2 {
+  font-size: clamp(64px, 6.5vw, 96px);
+  margin-bottom: 38px;
+  max-width: none;
+  line-height: 1.05;
+}
+.invitation-opening h2 em {
+  display: inline;
+  font-size: 0.65em;
+  margin: 0 10px;
+}
+.invitation-opening > .eyebrow {
+  margin-bottom: 20px;
+  font-size: 9px;
+}
+.invitation-opening .sealed-envelope {
+  width: min(450px, 83%);
+}
+@media (min-width: 1650px) {
+  .hero {
+    padding-inline: 15%;
+    gap: 12%;
+  }
+  .hero-copy {
+    max-width: 560px;
+    justify-self: end;
+  }
+}
+@media (min-width: 851px) and (max-width: 1100px) {
+  .hero {
+    padding: 60px 7% 90px;
+    gap: 8%;
+  }
+  .hero-copy {
+    padding: 30px 22px;
+  }
+  .hero h1 {
+    font-size: 88px;
+  }
+  .hero-photo > img {
+    height: 460px;
+  }
+  .hero-memento {
+    right: -35px;
+    width: 140px;
+    bottom: -45px;
+  }
+  .hero-memento > img {
+    height: 140px;
+  }
+  .hero-invite {
+    font-size: 21px;
+  }
+  .hero-copy > .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.7px;
+  }
+}
+@media (max-width: 850px) {
+  .site-header {
+    height: 68px;
+    padding: 0 6%;
+  }
+  .site-header .monogram {
+    font-size: 32px;
+  }
+  .site-header .header-rsvp {
+    font-size: 10px;
+    padding: 7px 12px;
+  }
+  .header-actions {
+    gap: 9px;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 30px 9% 36px;
+    gap: 20px;
+    min-height: 0;
+    background-position: 35% center;
+    background-size: auto 100%;
+    text-align: center;
+  }
+  .hero-copy {
+    display: contents;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+  .hero .wedding-crest {
+    display: none;
+  }
+  .hero .hero-copy > .eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    font-size: 8px;
+    letter-spacing: 2.2px;
+    line-height: 1.5;
+    text-align: center;
+    color: #f5dfc9;
+  }
+  .hero h1 {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(59px, 16.7vw, 84px);
+    line-height: 0.87;
+    letter-spacing: -2px;
+    margin: 0;
+    padding: 0 0 3px;
+    text-shadow: 0 2px 16px #31130d55;
+  }
+  .hero h1 .ampersand {
+    display: inline;
+    font-size: 0.49em;
+    margin: 0 2px;
+    line-height: inherit;
+  }
+  .hero h1 br {
+    display: block;
+  }
+  .hero-photo {
+    grid-column: 1;
+    grid-row: 3;
+    width: min(72%, 295px);
+    padding: 8px 8px 5px;
+    margin: 9px 25px 12px 0;
+    transform: rotate(-4deg);
+    border-radius: 0;
+    outline: 0;
+    align-self: center;
+    justify-self: center;
+  }
+  .hero-photo > img {
+    height: 305px;
+    min-height: 0;
+    max-height: none;
+    border-radius: 0;
+    object-position: 50% 38%;
+  }
+  .hero-photo:before {
+    inset: -10px 8px 10px -10px;
+    transform: rotate(6deg);
+  }
+  .hero-photo figcaption {
+    font-size: 17px;
+    padding: 9px 4px 3px;
+  }
+  .hero-photo figcaption > span:last-child {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .hero-memento {
+    width: 115px;
+    right: -54px;
+    bottom: -17px;
+    padding: 5px 5px 7px;
+    transform: rotate(13deg);
+  }
+  .hero-memento > img {
+    height: 111px;
+  }
+  .hero-memento > span {
+    font-size: 12px;
+    padding-top: 5px;
+  }
+  .hero-date {
+    grid-column: 1;
+    grid-row: 4;
+    margin: 0 auto;
+    gap: 12px;
+    line-height: 1.65;
+  }
+  .hero-date > span {
+    font-size: 39px;
+    padding-right: 12px;
+    border-color: #dfba8799;
+  }
+  .hero-date > div {
+    font-size: 9px;
+    text-align: left;
+    letter-spacing: 0.8px;
+  }
+  .hero-date div > span {
+    font-size: 7px;
+    letter-spacing: 0.6px;
+  }
+  .hero .hero-copy > .button {
+    grid-column: 1;
+    grid-row: 5;
+    justify-self: center;
+    min-width: 210px;
+    padding: 12px 18px;
+    min-height: 44px;
+    font-size: 11px;
+  }
+  .hero-invite {
+    display: none;
+  }
+  .hero-scroll {
+    display: none;
+  }
+  .hero::before,
+  .hero::after {
+    display: none;
+  }
+  .invitation-gate {
+    padding: 26px 22px;
+    background-position: center;
+  }
+  .invitation-opening {
+    max-width: 100%;
+    padding: 28px 14px 24px;
+    outline-offset: 6px;
+    background: #6d3022e8;
+  }
+  .invitation-opening h2 {
+    font-size: clamp(56px, 12vw, 82px);
+    line-height: 0.95;
+    letter-spacing: -1.5px;
+    max-width: 370px;
+    margin: 0 auto 35px;
+  }
+  .invitation-opening h2 em {
+    display: inline;
+    font-size: 0.65em;
+    margin: 0 7px;
+  }
+  .invitation-opening:before {
+    height: 30px;
+    width: 130px;
+    margin-bottom: 20px;
+  }
+  .invitation-opening > .eyebrow {
+    font-size: 8px;
+    letter-spacing: 2.4px;
+    margin-bottom: 24px;
+  }
+  .invitation-opening .sealed-envelope {
+    width: 90%;
+  }
+  .invitation-opening-date {
+    font-size: 8px;
+    letter-spacing: 3px;
+  }
+  .invitation-opening #invitation-instruction {
+    margin-top: 28px;
+  }
+}
+@media (max-width: 480px) {
+  .hero {
+    padding: 25px 8% 30px;
+    gap: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(56px, 17vw, 73px);
+    line-height: 0.86;
+  }
+  .hero-photo {
+    width: 73%;
+    margin: 6px 22px 10px 0;
+  }
+  .hero-photo > img {
+    height: 260px;
+  }
+  .hero-memento {
+    right: -51px;
+    bottom: -17px;
+    width: 107px;
+  }
+  .hero-memento > img {
+    height: 102px;
+  }
+  .hero-photo figcaption {
+    font-size: 15px;
+  }
+  .hero-photo figcaption > span:last-child {
+    font-size: 6px;
+  }
+  .hero .hero-copy > .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.6px;
+  }
+  .hero-date > span {
+    font-size: 37px;
+  }
+  .date-ribbon {
+    padding: 12px 17px;
+    gap: 10px;
+  }
+  .date-ribbon > span {
+    font-size: 7px;
+  }
+  .hero .hero-copy > .button {
+    font-size: 11px;
+    min-height: 43px;
+  }
+  .invitation-opening h2 {
+    font-size: 65px;
+    max-width: 270px;
+  }
+  .invitation-opening h2 em {
+    display: inline;
+    margin: 0 5px;
+  }
+  .invitation-opening .envelope-seal {
+    width: 60px;
+    height: 60px;
+  }
+  .invitation-gate {
+    padding: 24px 21px;
+  }
+}
+@media (max-width: 360px) {
+  .hero {
+    padding-inline: 8%;
+    gap: 16px;
+  }
+  .hero h1 {
+    font-size: 56px;
+  }
+  .hero-photo {
+    width: 74%;
+    margin-right: 16px;
+  }
+  .hero-photo > img {
+    height: 230px;
+  }
+  .hero-memento {
+    width: 91px;
+    right: -43px;
+    bottom: -12px;
+  }
+  .hero-memento > img {
+    height: 84px;
+  }
+  .hero-memento > span {
+    font-size: 10px;
+  }
+  .hero-photo figcaption {
+    font-size: 13px;
+  }
+  .hero .hero-copy > .eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.4px;
+  }
+  .hero-date div > span {
+    font-size: 6px;
+  }
+  .hero-date > span {
+    font-size: 34px;
+  }
+  .invitation-opening h2 {
+    font-size: 56px;
+    max-width: 230px;
+  }
+  .invitation-opening .envelope-seal {
+    width: 50px;
+    height: 50px;
+  }
+  .invitation-opening:before {
+    height: 26px;
+    margin-bottom: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 {
+    text-shadow: none;
+  }
+}
+/* Keep the printed caption legible against the copper mat. */
+.hero-photo figcaption {
+  color: #fff2de;
+  background: #a96949;
+}
+.hero-photo figcaption > span:last-child {
+  display: none;
+}
+
+/* A letterhead over the scene: quiet navigation and personal calligraphy. */
+@font-face {
+  font-family: Italianno;
+  src: url("../fonts/italianno-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --script: Italianno, "Cormorant Garamond", serif;
+}
+.site-header {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 104px;
+  z-index: 10;
+  background: transparent;
+  border: 0;
+  padding: 18px 5.5%;
+  align-items: center;
+}
+.site-header .monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: #632c21ce;
+  border: 1px solid #e2c3987a;
+  outline: 1px solid #e2c39833;
+  outline-offset: 4px;
+  border-radius: 50%;
+  font-size: 29px;
+  letter-spacing: -1.5px;
+  color: #f8e4c4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.site-header .monogram > span:first-child {
+  font-size: 20px;
+  margin: 0 2px;
+}
+.site-header .monogram-dot {
+  display: none;
+}
+.desktop-nav {
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  gap: 32px;
+  text-shadow: 0 1px 9px #35140e;
+}
+.site-header .header-rsvp {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid #f5dabb80;
+  padding: 7px 0;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  color: #fff2df;
+}
+.header-actions {
+  gap: 25px;
+}
+.header-actions > .icon-button {
+  color: #f9e4ca;
+  border: 1px solid #e2c39855;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  background: #632c2155;
+}
+.hero {
+  padding-top: 145px;
+  padding-bottom: 85px;
+  min-height: 100svh;
+}
+.hero-copy {
+  background: #713323e8;
+  border: 1px solid #e2c39870;
+  outline-color: #e2c39835;
+  padding-top: 34px;
+  padding-bottom: 32px;
+}
+.hero h1 {
+  font-family: var(--script);
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(114px, 10.2vw, 163px);
+  letter-spacing: 0;
+  line-height: 0.73;
+  margin-bottom: 26px;
+  padding-top: 13px;
+}
+.hero h1 .ampersand {
+  font-family: var(--serif);
+  font-size: 0.36em;
+  font-style: italic;
+  margin: 0 7px;
+  line-height: 1;
+}
+.hero .wedding-crest {
+  margin-bottom: 26px;
+}
+.invitation-opening h2 {
+  font-family: var(--script);
+  font-size: clamp(96px, 8.5vw, 132px);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.9;
+  margin-bottom: 35px;
+}
+.invitation-opening h2 em {
+  font-family: var(--serif);
+  font-size: 0.37em;
+  font-style: italic;
+  margin: 0 10px;
+}
+.footer-names,
+.story-signature {
+  font-family: var(--script);
+  font-style: normal;
+  letter-spacing: 0;
+}
+.footer-names {
+  font-size: 72px;
+}
+.story-signature {
+  font-size: 46px;
+}
+.camera-schedule {
+  width: min(440px, calc(100% - 28px));
+  padding: 45px 35px 34px !important;
+  text-align: center;
+  background: #713323 url("../images/paper-grain.svg") !important;
+  position: relative;
+  outline: 1px solid #d6ad7e55;
+  outline-offset: -9px;
+}
+.camera-schedule .schedule-close {
+  position: absolute;
+  top: 15px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  color: var(--foil);
+}
+.camera-schedule > .eyebrow {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--foil);
+  margin-bottom: 20px;
+}
+.camera-schedule h2 {
+  font-size: 43px;
+  line-height: 1.05;
+  font-style: italic;
+  letter-spacing: -0.5px;
+}
+.schedule-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 28px auto 24px;
+  padding-block: 18px 20px;
+  border-block: 1px solid #d6ad7e55;
+  max-width: 240px;
+}
+.schedule-date > span {
+  font-size: 10px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: #e5c6a2;
+}
+.schedule-date > strong {
+  font: 100px/0.95 var(--serif);
+  color: #f4dfc0;
+  margin: 10px 0 13px;
+}
+#camera-schedule-message {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #edcfb6;
+  margin: 0 auto;
+  max-width: 310px;
+}
+.unlock-countdown {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--foil);
+  min-height: 20px;
+  margin: 16px 0 22px;
+}
+.camera-schedule > .button {
+  font-size: 11px;
+  padding: 12px 20px;
+  min-height: 44px;
+}
+.camera-schedule > .text-button {
+  display: flex;
+  justify-content: center;
+  margin: 10px auto 0;
+}
+#film-dialog .preview-roll {
+  margin: 24px 0;
+}
+#film-dialog .preview-roll > img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+@media (min-width: 851px) and (max-width: 1100px) {
+  .hero {
+    padding-top: 135px;
+  }
+  .hero h1 {
+    font-size: 118px;
+  }
+  .hero-copy {
+    padding-inline: 22px;
+  }
+  .hero .wedding-crest {
+    margin-bottom: 25px;
+  }
+  .desktop-nav {
+    gap: 22px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 850px) {
+  .site-header {
+    height: 84px;
+    padding: 16px 6%;
+  }
+  .site-header .monogram {
+    width: 48px;
+    height: 48px;
+    font-size: 25px;
+  }
+  .site-header .monogram > span:first-child {
+    font-size: 17px;
+    margin: 0 1px;
+  }
+  .header-actions {
+    gap: 14px;
+  }
+  .header-actions > .icon-button {
+    height: 40px;
+    width: 40px;
+  }
+  .site-header .header-rsvp {
+    font-size: 10px;
+  }
+  .hero {
+    padding-top: 104px;
+    padding-bottom: 36px;
+  }
+  .hero h1 {
+    font-size: clamp(88px, 16.5vw, 116px);
+    line-height: 0.73;
+    margin: 0;
+    padding: 12px 0 7px;
+  }
+  .hero h1 .ampersand {
+    font-size: 0.35em;
+    margin: 0 5px;
+  }
+  .hero-copy {
+    display: contents;
+    border: 0;
+    outline: 0;
+    background: none;
+  }
+  .hero .hero-copy > .eyebrow {
+    font-size: 8px;
+    letter-spacing: 2px;
+  }
+  .invitation-opening h2 {
+    font-size: clamp(88px, 16vw, 118px);
+    line-height: 0.8;
+    max-width: 400px;
+  }
+  .invitation-opening h2 em {
+    font-size: 0.36em;
+    margin: 0 7px;
+  }
+  .footer-names {
+    font-size: 64px;
+  }
+}
+@media (max-width: 600px) {
+  .site-header .header-rsvp {
+    display: none;
+  }
+  .site-header {
+    height: 82px;
+  }
+  .hero {
+    padding-top: 100px;
+  }
+  .hero h1 {
+    font-size: clamp(83px, 21.5vw, 105px);
+    line-height: 0.72;
+    padding-top: 10px;
+  }
+  .hero h1 .ampersand {
+    font-size: 0.36em;
+    margin: 0 5px;
+  }
+  .hero .hero-copy > .eyebrow {
+    font-size: 7px;
+    letter-spacing: 2px;
+  }
+  .invitation-opening h2 {
+    font-size: 92px;
+    line-height: 0.8;
+    max-width: 280px;
+    margin-bottom: 30px;
+  }
+  .invitation-opening h2 em {
+    font-size: 0.35em;
+  }
+  .camera-schedule {
+    padding: 42px 25px 30px !important;
+  }
+  .camera-schedule h2 {
+    font-size: 37px;
+  }
+  .schedule-date > strong {
+    font-size: 86px;
+  }
+  .camera-schedule > .eyebrow {
+    font-size: 8px;
+  }
+}
+@media (max-width: 360px) {
+  .hero h1 {
+    font-size: 77px;
+  }
+  .hero {
+    padding-top: 96px;
+    gap: 14px;
+  }
+  .site-header .monogram {
+    width: 43px;
+    height: 43px;
+    font-size: 23px;
+  }
+  .site-header .monogram > span:first-child {
+    font-size: 15px;
+  }
+  .site-header {
+    padding-inline: 6%;
+  }
+  .invitation-opening h2 {
+    font-size: 80px;
+    max-width: 240px;
+  }
+  .camera-schedule h2 {
+    font-size: 34px;
+  }
+  .camera-schedule {
+    padding-inline: 23px !important;
+  }
+  .schedule-date {
+    margin-block: 22px 20px;
+  }
+  .unlock-countdown {
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,15 @@
+# Vercel builds from source; never upload local outputs, test data or originals.
+.git
+.vercel
+.test-artifacts
+node_modules
+dist
+docs
+pictures
+supabase
+tests
+playwright.config.mjs
+Paul_Roselyn_Enhanced_Invitation_DressCode_All_Requested_Colors.html
+.env
+.env.*
+!.env.example
