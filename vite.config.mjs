@@ -10,6 +10,33 @@ const photoEditor = {
   name: "local-photo-editor",
   configureServer(server) {
     let photoWriteQueue = Promise.resolve();
+    // Public files added after startup are absent from Vite's cached file list
+    // because content writes intentionally do not trigger reloads. Serve this
+    // narrow directory from disk so newly uploaded images work immediately.
+    server.middlewares.use("/content", async (req, res) => {
+      res.setHeader("Cache-Control", "no-store");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      const filename = new URL(req.url, "http://localhost").pathname.slice(1);
+      const match = filename.match(/^(.+)\.(jpg|png|webp)$/);
+      if (filename !== "photos.json" && (!match || !isPhotoSlot(match[1]))) {
+        res.statusCode = 404;
+        return res.end("Photo not found.");
+      }
+      if (!["GET", "HEAD"].includes(req.method)) {
+        res.statusCode = 405;
+        res.setHeader("Allow", "GET, HEAD");
+        return res.end();
+      }
+      try {
+        const bytes = await readFile(path.resolve(server.config.root, "public/content", filename));
+        res.setHeader("Content-Type", filename === "photos.json" ? "application/json" : match[2] === "jpg" ? "image/jpeg" : `image/${match[2]}`);
+        res.setHeader("Content-Length", bytes.length);
+        res.end(req.method === "HEAD" ? undefined : bytes);
+      } catch (error) {
+        res.statusCode = error.code === "ENOENT" ? 404 : 500;
+        res.end("Could not load this photograph.");
+      }
+    });
     server.middlewares.use("/api/rsvp", (req, res) => {
       res.setHeader("Content-Type", "application/json");
       res.setHeader("Cache-Control", "private, no-store");

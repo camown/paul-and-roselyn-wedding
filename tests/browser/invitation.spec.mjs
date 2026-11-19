@@ -433,7 +433,15 @@ test("real multi-photo uploads persist in an isolated local project without relo
     expect(reloads).toBe(0);
     const manifest = JSON.parse(await readFile(path.join(fixture, "public/content/photos.json"), "utf8"));
     expect(Object.keys(manifest)).toHaveLength(2);
-    for (const ref of Object.values(manifest)) expect(await readFile(path.join(fixture, "public", ref))).toEqual(image);
+    for (const [slot, ref] of Object.entries(manifest)) {
+      expect(await readFile(path.join(fixture, "public", ref))).toEqual(image);
+      const served = await page.request.get(base + ref + "?v=fresh-upload");
+      expect(served.headers()["content-type"]).toContain("image/jpeg");
+      expect(await served.body()).toEqual(image);
+      await expect.poll(() => page.locator(`#opening-photo-settings img[data-photo="${slot}"]`).evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+    }
+    expect((await page.request.get(base + "/content/opening-00000000-0000-0000-0000-000000000000.jpg")).status()).toBe(404);
+    expect((await page.request.get(base + "/content/not-a-photo.txt")).status()).toBe(404);
     await mkdir(path.join(fixture, "pictures"));
     await writeFile(path.join(fixture, "pictures", "choice.jpg"), image);
     await page.getByRole("button", { name: "Choose cover photograph from pictures folder", exact: true }).click();
@@ -443,10 +451,12 @@ test("real multi-photo uploads persist in an isolated local project without relo
     await expect(page.locator("#editor-status")).toHaveText("Photograph replaced and saved in the project.");
     const updated = JSON.parse(await readFile(path.join(fixture, "public/content/photos.json"), "utf8"));
     expect(await readFile(path.join(fixture, "public", updated.hero))).toEqual(image);
+    await expect.poll(() => page.locator('#opening-photo-settings img[data-photo="hero"]').evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
     expect((await page.request.get(base + "/__dev/library?file=..%2Findex.html")).status()).toBe(404);
     expect((await page.request.get(base + "/__dev/library", { headers: { Origin: "https://other.example" } })).status()).toBe(403);
     await page.reload();
     await expect(page.locator("#opening-photo-settings .editor-slot")).toHaveCount(4);
+    await expect.poll(() => page.locator("#opening-photo-settings img").evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0))).toBe(true);
     await page.getByRole("button", { name: "Close photo settings", exact: true }).click();
     await page.getByRole("button", { name: "Open the opening photo gallery", exact: true }).click();
     await expect(page.locator("#photo-position")).toContainText("1 / 4");
