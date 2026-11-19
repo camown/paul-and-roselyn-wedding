@@ -4,7 +4,7 @@ import vm from "node:vm";
 import { readFile } from "node:fs/promises";
 import handler from "../api/rsvp.js";
 
-const reply = { id: "12345678-1234-1234-1234-123456789abc", name: "Test guest", attendance: "yes", seats: 2, dietary: "", message: "=1+1" };
+const reply = { id: "12345678-1234-1234-1234-123456789abc", name: "Test guest", attendance: "yes", seats: 1, dietary: "", message: "=1+1" };
 const origin = "https://invitation.example";
 function response() {
   return { headers: {}, setHeader(k, v) { this.headers[k] = v; }, status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } };
@@ -23,6 +23,8 @@ test("Sheets relay validates input and origin and requires matching durable ackn
       const body = JSON.parse(options.body);
       assert.equal(body.secret, process.env.RSVP_SHEETS_SECRET);
       assert.equal(body.reply.name, reply.name);
+      assert.equal(body.reply.seats, 1);
+      assert.equal(body.reply.dietary, "");
       return { ok: true, json: async () => ({ ok: true, id: reply.id }) };
     };
     const req = { method: "POST", headers: { origin, "content-type": "application/json" }, body: reply };
@@ -33,6 +35,7 @@ test("Sheets relay validates input and origin and requires matching durable ackn
     for (const [request, code] of [
       [{ ...req, headers: { ...req.headers, origin: "https://other.example" } }, 403],
       [{ ...req, body: { ...reply, seats: 5 } }, 400],
+      [{ ...req, body: { ...reply, seats: 2 } }, 400],
       [{ ...req, body: { ...reply, name: " " } }, 400],
       [{ ...req, body: "{" }, 400],
       [{ ...req, headers: { ...req.headers, "content-length": "9000" } }, 413],

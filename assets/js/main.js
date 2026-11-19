@@ -405,20 +405,11 @@ const rsvpModeReady = (async () => {
   } catch { /* The local Vite preview has no configured RSVP service. */ }
   if (deliverRsvp) {
     $(".mode-notice", form).textContent = "Your reply will be sent privately to Paul & Roselyn.";
-    $("#privacy-storage-notice").textContent = "When you send an RSVP, your name, attendance, guest count, dietary note and message are saved in Paul & Roselyn’s private Google spreadsheet. A copy stays in this browser so you can update it. Camera photos still stay on this device and are not sent to the couple.";
-    $("#privacy-device-notice").textContent = "These controls export or remove this device’s copy only. They do not delete a reply already received by the couple. Contact Paul & Roselyn to correct or remove the shared reply. Avoid including sensitive medical information in dietary notes.";
+    $("#privacy-storage-notice").textContent = "When you send an RSVP, your name, attendance and optional note are saved in Paul & Roselyn’s private Google spreadsheet. Each invitation is for one guest. A copy stays in this browser so you can update it. Camera photos still stay on this device and are not sent to the couple.";
+    $("#privacy-device-notice").textContent = "These controls export or remove this device’s copy only. They do not delete a reply already received by the couple. Contact Paul & Roselyn to correct or remove the shared reply.";
     $('button[type="submit"]', form).firstChild.textContent = "Send our reply ";
   }
 })();
-function attendanceChanged() {
-  const declined = form.elements.attendance.value === "no";
-  $("#attending-fields").hidden = declined;
-  $("#guest-count").disabled = declined;
-  $("#dietary").disabled = declined;
-}
-$$('[name="attendance"]').forEach((input) =>
-  input.addEventListener("change", attendanceChanged),
-);
 async function loadReply() {
   try {
     await rsvpModeReady;
@@ -426,10 +417,7 @@ async function loadReply() {
     if (!reply) return;
     form.elements.name.value = reply.name;
     form.elements.attendance.value = reply.attendance;
-    form.elements.seats.value = String(reply.seats || 1);
-    form.elements.dietary.value = reply.dietary;
     form.elements.message.value = reply.message;
-    attendanceChanged();
     $("#rsvp-status").textContent =
       deliverRsvp ? (reply.delivered ? "Your reply was received. You can update it below." : "Your preview reply is on this device. Send it below to reach the couple.") : "Your preview reply is saved on this device. You can update it below.";
     $('button[type="submit"]', form).firstChild.textContent =
@@ -455,8 +443,8 @@ form.addEventListener("submit", async (event) => {
     const reply = {
       name,
       attendance: data.get("attendance"),
-      seats: data.get("attendance") === "no" ? 0 : Number(data.get("seats")),
-      dietary: String(data.get("dietary") || "").trim(),
+      seats: data.get("attendance") === "no" ? 0 : 1,
+      dietary: "",
       message: String(data.get("message") || "").trim(),
       updatedAt: new Date().toISOString(),
     };
@@ -748,7 +736,6 @@ $("#clear-data").addEventListener("click", async () => {
     await storeAction("photos", "readwrite", (store) => store.clear());
     await storeAction("settings", "readwrite", (store) => store.clear());
     form.reset();
-    attendanceChanged();
     $("#rsvp-status").textContent = "";
     $('button[type="submit"]', form).firstChild.textContent =
       deliverRsvp ? "Send our reply " : "Save preview reply ";

@@ -4,6 +4,8 @@ Destination: [the couple’s spreadsheet](https://docs.google.com/spreadsheets/d
 
 The website sends replies through Vercel to a Google Apps Script receiver. Guests cannot read the sheet or see the receiver secret. A dedicated `Website RSVPs` tab stores reply ID, Philippine timestamp, name, attendance, seats, dietary notes and message. Existing tabs remain untouched. Repeated submissions from the same browser update the same reply ID. Clearing browser storage or changing devices creates another ID; this is not invitation authentication or a verified seat entitlement.
 
+Current form policy: one guest per invitation. The form collects only name, attendance and an optional note. Vercel derives one seat for acceptance or zero for decline and rejects a conflicting supplied count. It always sends a blank dietary value. The existing receiver columns remain compatible; the unused dietary column stays empty and seat count is an automatic internal value, not a guest entry.
+
 ## Live connection — verified 19 November 2026
 
 Authorized and deployed in the signed-in browser: [Paul & Roselyn · Private RSVPs](https://script.google.com/u/0/home/projects/1jImKPNK3QmnLPzVhyk5m-2XHKy4p-uJG_4ekNZmG2gXpD9vxjBfK026h/edit). Google authorization was approved by the owner. Its Sheets scope permits access across the owner's spreadsheets; the receiver code uses only the fixed wedding-sheet ID. The spreadsheet's general access is Restricted, verified Private to only me. Only the secret-validated receiver is callable without a Google login.

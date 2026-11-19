@@ -85,6 +85,9 @@ test("RSVP delivery confirms only acknowledged replies and retries the same repl
   await expect(page.locator("#rsvp-status")).toContainText("received by Paul & Roselyn");
   expect(submissions).toHaveLength(2);
   expect(submissions[0].id).toBe(submissions[1].id);
+  expect(submissions[1].seats).toBe(1);
+  expect(submissions[1].dietary).toBe("");
+  await expect(page.locator('#rsvp-form select, #rsvp-form [name="dietary"]')).toHaveCount(0);
   await page.reload();
   await expect(page.locator("#rsvp-status")).toHaveText("Your reply was received. You can update it below.");
 });
@@ -298,11 +301,11 @@ test("restyled invitation controls remain usable on a phone", async ({ page }) =
   }
   await page.getByLabel("Your name", { exact: true }).fill("Test Guest");
   await page.getByLabel("Joyfully accepts", { exact: true }).check();
-  await page.getByLabel("Seats in your invitation", { exact: true }).selectOption("2");
+  await expect(page.locator('#rsvp-form select, #rsvp-form [name="dietary"]')).toHaveCount(0);
   await page.getByRole("button", { name: "Save preview reply", exact: true }).click();
-  await expect(page.locator("#rsvp-status")).toContainText("2 guests is saved on this device only");
+  await expect(page.locator("#rsvp-status")).toContainText("1 guest is saved on this device only");
   await page.getByLabel("Regretfully declines", { exact: true }).check();
-  await expect(page.locator("#attending-fields")).not.toBeVisible();
+  await expect(page.locator('#rsvp-form select, #rsvp-form [name="dietary"]')).toHaveCount(0);
   await page.getByRole("button", { name: "Update preview reply", exact: true }).click();
   await expect(page.locator("#rsvp-status")).toContainText("decline is saved on this device only");
   await page.reload();

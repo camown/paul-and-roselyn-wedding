@@ -33,15 +33,13 @@ module.exports = async function handler(req, res) {
   const text = (value, max) => typeof value === "string" && value.trim().length <= max ? value.trim() : null;
   const reply = {
     id: text(body?.id, 36), name: text(body?.name, 120), attendance: body?.attendance,
-    seats: body?.attendance === "no" ? 0 : body?.seats,
-    dietary: text(body?.dietary, 500), message: text(body?.message, 1500),
+    seats: body?.attendance === "no" ? 0 : 1,
+    dietary: "", message: text(body?.message, 1500),
   };
   if (!/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(reply.id || "") || !reply.name
     || !["yes", "no"].includes(reply.attendance) || !Number.isInteger(reply.seats)
-    || reply.seats < (reply.attendance === "yes" ? 1 : 0) || reply.seats > 4
-    || reply.dietary === null || reply.message === null)
-    return res.status(400).json({ error: "Please check your name, attendance and guest count." });
-  if (reply.attendance === "no") reply.dietary = "";
+    || (body?.seats !== undefined && body.seats !== reply.seats) || reply.message === null)
+    return res.status(400).json({ error: "Please check your name and attendance. Each invitation is for one guest." });
   try {
     const upstream = await fetch(endpoint, {
       method: "POST", headers: { "Content-Type": "application/json" },
