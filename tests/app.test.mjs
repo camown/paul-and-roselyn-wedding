@@ -106,9 +106,10 @@ test("unconfigured RSVP never exposes records or claims a successful save", asyn
       },
     };
     await handler({ method, body: { name: "Private Guest" } }, res);
-    assert.equal(status, 503);
-    assert.equal(headers["Cache-Control"], "no-store");
-    assert.match(body.error, /No reply has been saved/);
+    assert.equal(status, method === "GET" ? 200 : 503);
+    assert.equal(headers["Cache-Control"], "private, no-store");
+    if (method === "GET") assert.equal(body.enabled, false);
+    else assert.match(body.error, /No reply has been saved/);
     assert.equal(body.rsvps, undefined);
   }
 });

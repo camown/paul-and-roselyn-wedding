@@ -505,7 +505,7 @@
           <summary>How will our guest camera work?</summary>
           <p>
             The camera opens only on 19 December 2026, Philippine time. Your
-            disposable roll has 24 camera-only frames. No photo-library uploads,
+            disposable roll has 12 camera-only frames. No photo-library uploads,
             retakes, or individual shot deletion. Photos stay hidden until they
             develop. This local preview reveals on 20 December at noon,
             Philippine time; the shared wedding service is not connected yet.
@@ -563,14 +563,14 @@
       </div>
       <div class="camera-toolbar">
         <span class="camera-status"><i></i> LOCAL PREVIEW</span
-        ><span id="roll-count">24 shots left</span>
+        ><span id="roll-count">12 shots left</span>
       </div>
       <div class="viewfinder">
         <video id="camera-video" autoplay muted playsinline hidden></video>
         <div id="camera-placeholder">
           <span data-icon="camera"></span>
           <h3>A little of your day.</h3>
-          <p>24 frames. No retakes. Just the moment.</p>
+          <p>12 frames. No retakes. Just the moment.</p>
           <button id="enable-camera" class="button button-light">
             Enable camera
           </button>
@@ -702,10 +702,18 @@
       <p class="editor-help">The large opening photograph and small keepsake have their own gallery, separate from Memories.</p>
       <div id="opening-photo-settings"></div>
       <button class="button" id="add-opening-photos" type="button">Add opening photos</button>
+      <button class="text-button" id="add-opening-from-folder" type="button">Add from pictures folder</button>
       <input type="file" id="opening-gallery-files" accept="image/jpeg,image/png,image/webp" multiple hidden />
       <h3 class="editor-section-heading">Our story &amp; Memories</h3>
       <div id="photo-settings"></div>
       <p id="editor-status" role="status"></p>
+    </dialog>
+    <dialog id="picture-library-dialog" aria-label="Choose from pictures folder">
+      <div class="dialog-header"><h2>Choose your photographs</h2><button class="icon-button" data-close data-icon="close" aria-label="Close pictures folder"></button></div>
+      <p id="picture-library-instruction">Photographs from your project’s pictures folder.</p>
+      <div id="picture-library-grid" class="picture-library-grid"></div>
+      <button id="use-library-pictures" class="button button-rust" disabled>Use selected photographs</button>
+      <p id="picture-library-status" role="status"></p>
     </dialog>
     <dialog aria-label="Your privacy" id="privacy-dialog">
       <div class="dialog-header">

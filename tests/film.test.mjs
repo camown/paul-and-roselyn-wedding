@@ -84,7 +84,8 @@ const frame = () => ({
   blob: new Blob(["camera frame"], { type: "image/jpeg" }),
   createdAt: new Date().toISOString(),
 });
-test("a disposable roll keeps an atomic 24-exposure limit during simultaneous captures", async () => {
+test("a disposable roll keeps an atomic 12-exposure limit during simultaneous captures", async () => {
+  assert.equal(FILM_LIMIT, 12);
   const database = await openTestDatabase();
   try {
     const results = await Promise.allSettled(
@@ -94,7 +95,7 @@ test("a disposable roll keeps an atomic 24-exposure limit during simultaneous ca
       results.filter((r) => r.status === "fulfilled").length,
       FILM_LIMIT,
     );
-    assert.equal(results.filter((r) => r.status === "rejected").length, 6);
+    assert.equal(results.filter((r) => r.status === "rejected").length, 30 - FILM_LIMIT);
     await assert.rejects(
       recordFilmExposure(database, frame()),
       /roll is complete/,

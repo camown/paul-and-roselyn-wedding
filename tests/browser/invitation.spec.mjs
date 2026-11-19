@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { readFile, cp, mkdir, mkdtemp, rm } from "node:fs/promises";
+import { readFile, writeFile, cp, mkdir, mkdtemp, rm } from "node:fs/promises";
 import path from "node:path";
 import { createServer } from "vite";
 import configFactory from "../../vite.config.mjs";
@@ -11,6 +11,8 @@ import {
 } from "../../shared/event-window.mjs";
 
 async function prepare(page, epoch = CAMERA_OPENS_AT - 86400000) {
+  // User-selected local album contents must not change fixture album counts.
+  await page.route("**/__dev/photos", route => route.request().method() === "GET" ? route.fulfill({ json: {} }) : route.fallback());
   const clock = { epoch, unavailable: false, malformed: false };
   await page.route("**/api/event-status", (route) =>
     route.fulfill(
@@ -60,6 +62,30 @@ async function openLiveCamera(page) {
     page.getByRole("button", { name: "Take photo", exact: true }),
   ).toBeEnabled();
 }
+
+test("RSVP delivery confirms only acknowledged replies and retries the same reply ID", async ({ page }) => {
+  await prepare(page);
+  const submissions = [];
+  let fail = true;
+  await page.route("**/api/rsvp", async route => {
+    if (route.request().method() === "GET") return route.fulfill({ json: { enabled: true } });
+    const reply = route.request().postDataJSON(); submissions.push(reply);
+    return route.fulfill(fail ? { status: 502, json: { error: "Could not confirm your reply. Please retry." } } : { json: { saved: true, id: reply.id } });
+  });
+  await enter(page);
+  await page.getByLabel("Your name", { exact: true }).fill("Test guest");
+  await page.getByLabel("Joyfully accepts", { exact: true }).check();
+  await page.getByRole("button", { name: "Send our reply", exact: false }).click();
+  await expect(page.locator("#rsvp-status")).toHaveText("Could not confirm your reply. Please retry.");
+  expect(await page.locator("#rsvp-status").textContent()).not.toContain("received");
+  fail = false;
+  await page.getByRole("button", { name: "Send our reply", exact: false }).click();
+  await expect(page.locator("#rsvp-status")).toContainText("received by Paul & Roselyn");
+  expect(submissions).toHaveLength(2);
+  expect(submissions[0].id).toBe(submissions[1].id);
+  await page.reload();
+  await expect(page.locator("#rsvp-status")).toHaveText("Your reply was received. You can update it below.");
+});
 
 test("optional Supabase client reuses its instance without creating a guest account", async ({ page }) => {
   let signups = 0;
@@ -145,7 +171,7 @@ test("wedding capture works, then a midnight check stops the stream and rejects 
   await enter(page);
   await openLiveCamera(page);
   await page.getByRole("button", { name: "Take photo", exact: true }).click();
-  await expect(page.locator("#roll-count")).toHaveText("23 / 24 LEFT");
+  await expect(page.locator("#roll-count")).toHaveText("11 / 12 LEFT");
   expect(await page.locator("#preview-roll img").count()).toBe(0);
   clock.epoch = CAMERA_CLOSES_AT;
   await page.getByRole("button", { name: "Take photo", exact: true }).click();
@@ -161,16 +187,16 @@ test("wedding capture works, then a midnight check stops the stream and rejects 
   expect(await page.locator(".film-frame.is-exposed").count()).toBe(1);
 });
 
-test("24 wedding-day exposures fill and lock a concealed disposable roll", async ({
+test("12 wedding-day exposures fill and lock a concealed disposable roll", async ({
   page,
 }) => {
   await prepare(page, CAMERA_OPENS_AT + 3600000);
   await enter(page);
   await openLiveCamera(page);
-  for (let left = 23; left >= 0; left--) {
+  for (let left = 11; left >= 0; left--) {
     await page.getByRole("button", { name: "Take photo", exact: true }).click();
     await expect(page.locator("#roll-count")).toHaveText(
-      left ? String(left).padStart(2, "0") + " / 24 LEFT" : "ROLL COMPLETE",
+      left ? String(left).padStart(2, "0") + " / 12 LEFT" : "ROLL COMPLETE",
     );
   }
   await expect(
@@ -179,7 +205,7 @@ test("24 wedding-day exposures fill and lock a concealed disposable roll", async
   expect(await page.locator("#camera-dialog input[type=file]").count()).toBe(0);
   expect(await page.locator("#preview-roll img").count()).toBe(0);
   expect(await page.locator("#preview-roll button").count()).toBe(0);
-  await expect(page.locator(".film-frame.is-exposed")).toHaveCount(24);
+  await expect(page.locator(".film-frame.is-exposed")).toHaveCount(12);
 });
 
 test("developed photos have a separate viewer after capture closes", async ({
@@ -362,7 +388,7 @@ test("adding and removing opening photos stays separate from Memories", async ({
   await expect(page.locator("#opening-photo-settings .editor-slot")).toHaveCount(4);
   await page.getByRole("button", { name: "Close photo settings", exact: true }).click();
   await page.getByRole("button", { name: "Open the opening photo gallery", exact: true }).click();
-  await expect(page.locator("#photo-position")).toContainText("Opening photographs · 1 / 4");
+  await expect(page.locator("#photo-position")).toContainText("Opening photographs · 4 / 4");
   await page.getByRole("button", { name: "Close enlarged photo", exact: true }).click();
   await page.getByRole("button", { name: "Enlarge our first memory", exact: true }).click();
   await expect(page.locator("#photo-position")).toContainText("Memories · 1 / 3");
@@ -406,6 +432,17 @@ test("real multi-photo uploads persist in an isolated local project without relo
     const manifest = JSON.parse(await readFile(path.join(fixture, "public/content/photos.json"), "utf8"));
     expect(Object.keys(manifest)).toHaveLength(2);
     for (const ref of Object.values(manifest)) expect(await readFile(path.join(fixture, "public", ref))).toEqual(image);
+    await mkdir(path.join(fixture, "pictures"));
+    await writeFile(path.join(fixture, "pictures", "choice.jpg"), image);
+    await page.getByRole("button", { name: "Choose cover photograph from pictures folder", exact: true }).click();
+    await expect(page.getByRole("dialog", { name: "Choose from pictures folder" })).toBeVisible();
+    await page.getByRole("button", { name: "Select picture 1", exact: true }).click();
+    await page.getByRole("button", { name: "Use selected photographs", exact: true }).click();
+    await expect(page.locator("#editor-status")).toHaveText("Photograph replaced and saved in the project.");
+    const updated = JSON.parse(await readFile(path.join(fixture, "public/content/photos.json"), "utf8"));
+    expect(await readFile(path.join(fixture, "public", updated.hero))).toEqual(image);
+    expect((await page.request.get(base + "/__dev/library?file=..%2Findex.html")).status()).toBe(404);
+    expect((await page.request.get(base + "/__dev/library", { headers: { Origin: "https://other.example" } })).status()).toBe(403);
     await page.reload();
     await expect(page.locator("#opening-photo-settings .editor-slot")).toHaveCount(4);
     await page.getByRole("button", { name: "Close photo settings", exact: true }).click();

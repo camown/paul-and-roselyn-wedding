@@ -28,11 +28,11 @@ The Vite development server provides `/api/event-status`; Vercel will use `api/e
 - Coordinated rust silk and embossed floral stationery across the entire invitation, self-hosted Bodoni Moda / Italianno / DM Sans, responsive layouts and native dialogs.
 - Wedding schedule, Google Maps/Waze links, downloadable calendar invitation and four-colour attire guide. The opening photographs have their own album with small arrows, tap-to-open and touch swipe. Memories has a separate three-photo gallery; the story photograph opens on its own. No fullscreen badges are overlaid on photos.
 - Editable **preview** RSVP stored in IndexedDB; acceptance, decline and seat selection. This is not delivered to the couple.
-- Capture-only disposable camera: 24 exposures, compressed JPEGs, no library imports, retakes or individual deletion. Capture opens only on 19 December 2026, midnight to midnight Philippine time. Server time anchors the UI and local write guard; stale or unavailable time keeps capture locked. Frames stay concealed until 20 December at noon Philippine time in a separate viewer. No photo is sent to a cloud service.
+- Capture-only disposable camera: 12 exposures, compressed JPEGs, no library imports, retakes or individual deletion. Capture opens only on 19 December 2026, midnight to midnight Philippine time. Server time anchors the UI and local write guard; stale or unavailable time keeps capture locked. Frames stay concealed until 20 December at noon Philippine time in a separate viewer. No photo is sent to a cloud service.
 - Privacy controls export/delete this browser’s preview data. Exports contain ordinary JPEG files and a JSON manifest in a ZIP archive.
 - Development photo settings: use the visible **Photos** button on localhost, or open `http://127.0.0.1:3000/?photos=edit` directly. The **Opening photo gallery** section replaces the cover and small keepsake, and **Add opening photos** accepts multiple additional JPG/PNG/WebP files. Extras can be replaced or removed from that album. The story and three Memories replacements have separate controls. Changes persist under `public/content` on D: and ship with the next committed build. Local writes are serialized and the manifest is replaced atomically; saves do not reload the editor mid-upload. This is loopback development tooling, not a production admin login.
 
-Real iOS/Android camera compatibility must be verified before invitations are sent. Browser storage can be evicted; it is not a backup. The local 24-shot demonstration is not a secure cross-device quota.
+Real iOS/Android camera compatibility must be verified before invitations are sent. Browser storage can be evicted; it is not a backup. The local 12-shot demonstration is not a secure cross-device quota.
 
 ## Planned production system
 
@@ -40,7 +40,9 @@ Vercel import settings and post-deployment checks are in [the deployment guide](
 
 See [architecture](docs/architecture.md), [design research](docs/design-research.md) and [QA](docs/qa-results.md). The Supabase migration and database checks are under `supabase/`.
 
-Recommended: private invitation links, invisible guest sessions, host sign-in, invitation seat limits, server-enforced 24-shot rolls, private Supabase Storage, moderated delayed album, and explicit export/retention. Vercel hosts the frontend and server APIs. No guest app or password is required.
+Recommended: private invitation links, invisible guest sessions, host sign-in, invitation seat limits, server-enforced 12-shot rolls, private Supabase Storage, moderated delayed album, and explicit export/retention. Vercel hosts the frontend and server APIs. No guest app or password is required.
+
+Google Sheets RSVP delivery is prepared but requires owner authorization and server settings: [setup](docs/google-sheets-rsvp.md). Until configured, the form remains a device-only preview. The local photo editor now includes a thumbnail picker for the project's `pictures` folder, alongside ordinary file replacement and multiple opening-photo uploads.
 
 **The guest data backend is not connected.** The public Supabase browser client is configured for project `vmstqqfmwkisyzwrlftw` in ignored `.env.local`; run `npm run supabase:check` for a read-only connection check. Vercel needs `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` (see `.env.example`), rather than the Next.js quickstart's `NEXT_PUBLIC_` names. The client supports host-session persistence/refresh but does not create accounts or send guest data. Host login/dashboard, invitation provisioning/redemption, durable RSVPs, signed uploads, media processing, moderation, rate limiting and cleanup remain production integration work. The old public/in-memory RSVP endpoint fails closed with HTTP 503, instead of exposing guest information or claiming saves.
 

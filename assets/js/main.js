@@ -397,6 +397,17 @@ function countdown() {
 countdown();
 setInterval(countdown, 30000);
 const form = $("#rsvp-form");
+let deliverRsvp = false;
+const rsvpModeReady = (async () => {
+  try {
+    const response = await fetch("/api/rsvp", { cache: "no-store", headers: { Accept: "application/json" }, signal: AbortSignal.timeout(5000) });
+    deliverRsvp = response.ok && (await response.json()).enabled === true;
+  } catch { /* The local Vite preview has no configured RSVP service. */ }
+  if (deliverRsvp) {
+    $(".mode-notice", form).textContent = "Your reply will be sent privately to Paul & Roselyn.";
+    $('button[type="submit"]', form).firstChild.textContent = "Send our reply ";
+  }
+})();
 function attendanceChanged() {
   const declined = form.elements.attendance.value === "no";
   $("#attending-fields").hidden = declined;
@@ -408,6 +419,7 @@ $$('[name="attendance"]').forEach((input) =>
 );
 async function loadReply() {
   try {
+    await rsvpModeReady;
     const reply = await getReply();
     if (!reply) return;
     form.elements.name.value = reply.name;
@@ -417,9 +429,9 @@ async function loadReply() {
     form.elements.message.value = reply.message;
     attendanceChanged();
     $("#rsvp-status").textContent =
-      "Your preview reply is saved on this device. You can update it below.";
+      deliverRsvp ? (reply.delivered ? "Your reply was received. You can update it below." : "Your preview reply is on this device. Send it below to reach the couple.") : "Your preview reply is saved on this device. You can update it below.";
     $('button[type="submit"]', form).firstChild.textContent =
-      "Update preview reply ";
+      deliverRsvp ? "Send updated reply " : "Update preview reply ";
   } catch (error) {
     $("#rsvp-status").textContent = error.message;
   }
@@ -430,6 +442,7 @@ form.addEventListener("submit", async (event) => {
   const submit = $('button[type="submit"]', form);
   submit.disabled = true;
   try {
+    await rsvpModeReady;
     const data = new FormData(form);
     const name = String(data.get("name") || "").trim();
     if (!name) {
@@ -445,6 +458,26 @@ form.addEventListener("submit", async (event) => {
       message: String(data.get("message") || "").trim(),
       updatedAt: new Date().toISOString(),
     };
+    if (deliverRsvp) {
+      const previous = await getReply();
+      reply.id = previous?.id || crypto.randomUUID();
+      // Persist the ID before sending, so an uncertain network result is retryable.
+      await storeAction("settings", "readwrite", store => store.put(reply, "reply"));
+      const response = await fetch("/api/rsvp", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reply), signal: AbortSignal.timeout(12000),
+      });
+      const result = await response.json();
+      if (!response.ok || result.saved !== true || result.id !== reply.id)
+        throw new Error(result.error || "We couldn’t confirm your reply. Please try again.");
+      reply.delivered = true;
+      // A local cache problem must not undo an acknowledged remote confirmation.
+      await storeAction("settings", "readwrite", store => store.put(reply, "reply")).catch(() => {});
+      $("#rsvp-status").textContent = `Thank you, ${name}. Your reply has been received by Paul & Roselyn.`;
+      submit.firstChild.textContent = "Send updated reply ";
+      toast("Your reply has been received.");
+      return;
+    }
     await storeAction("settings", "readwrite", (store) =>
       store.put(reply, "reply"),
     );
@@ -584,12 +617,12 @@ async function renderRoll() {
     ? "A little of your day."
     : "Your roll is complete.";
   $("#camera-placeholder p").textContent = remaining
-    ? "24 frames. No retakes. Just the moment."
+    ? `${FILM_LIMIT} frames. No retakes. Just the moment.`
     : "Every frame is saved for the reveal.";
   rollUrls.forEach((url) => URL.revokeObjectURL(url));
   rollUrls = [];
   $("#roll-count").textContent = remaining
-    ? String(remaining).padStart(2, "0") + " / 24 LEFT"
+    ? String(remaining).padStart(2, "0") + ` / ${FILM_LIMIT} LEFT`
     : "ROLL COMPLETE";
   $("#preview-roll").replaceChildren();
   $("#preview-roll").classList.toggle("undeveloped-roll", !developed);
@@ -751,6 +784,7 @@ if (import.meta.env.DEV) {
     customPhotos = result;
     if (file) photoVersions[slot] = Date.now();
     else delete photoVersions[slot];
+    if (file && (slot === "hero" || slot === "keepsake" || isOpeningPhotoSlot(slot))) openingActiveSlot = slot;
     applyPhotos();
     updateLocalPhotoSettings();
   }
@@ -773,6 +807,11 @@ if (import.meta.env.DEV) {
     input.type = "file";
     input.accept = "image/jpeg,image/png,image/webp";
     label.addEventListener("click", () => input.click());
+    const fromFolder = document.createElement("button");
+    fromFolder.type = "button"; fromFolder.className = "text-button";
+    fromFolder.textContent = "Choose from pictures";
+    fromFolder.setAttribute("aria-label", `Choose ${titleText.toLowerCase()} from pictures folder`);
+    fromFolder.addEventListener("click", () => openPictureLibrary(slot, titleText));
     const reset = document.createElement("button");
     reset.type = "button";
     reset.className = "icon-button";
@@ -792,6 +831,7 @@ if (import.meta.env.DEV) {
           method === "DELETE"
             ? (extra ? "Photo removed from the opening gallery." : "Default restored.")
             : "Photo saved in the project. It will be included in the next build.";
+        toast(method === "DELETE" ? "Photo setting updated." : `${titleText} updated.`);
       } catch (error) {
         $("#editor-status").textContent = error.message;
       } finally {
@@ -804,7 +844,7 @@ if (import.meta.env.DEV) {
       if (input.files?.[0]) edit("PUT", input.files[0]);
     });
     reset.addEventListener("click", () => edit("DELETE"));
-    body.append(title, label, input);
+    body.append(title, label, fromFolder, input);
     row.append(img, body, reset);
     target.append(row);
   }
@@ -831,11 +871,72 @@ if (import.meta.env.DEV) {
         added++;
       }
       $("#editor-status").textContent = `${added} opening photograph${added === 1 ? "" : "s"} saved to the project.`;
+      toast(`${added} opening photograph${added === 1 ? "" : "s"} added.`);
     } catch (error) {
       $("#editor-status").textContent = `${added} added. ${error.message}`;
     } finally {
       addOpening.disabled = false; openingFiles.disabled = false; openingFiles.value = "";
     }
+  });
+  let librarySlot = null;
+  let libraryBusy = false;
+  let selectedLibraryPhotos = new Map();
+  const libraryButton = $("#use-library-pictures");
+  async function openPictureLibrary(slot, title) {
+    if (libraryBusy) return;
+    librarySlot = slot; selectedLibraryPhotos = new Map();
+    libraryButton.disabled = true;
+    $("#picture-library-grid").replaceChildren();
+    $("#picture-library-status").textContent = "Loading your pictures…";
+    $("#picture-library-instruction").textContent = slot ? `Choose one photograph for ${title.toLowerCase()}.` : "Choose one or more photographs to add to the opening gallery.";
+    openDialog("picture-library-dialog");
+    try {
+      const response = await fetch("/__dev/library", { cache: "no-store" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      $("#picture-library-status").textContent = result.files.length ? `${result.files.length} photographs found in your pictures folder.` : "Put JPG, PNG or WebP photographs in the project’s pictures folder, then reopen this picker.";
+      result.files.forEach((photo, i) => {
+        const button = document.createElement("button");
+        button.type = "button"; button.className = "picture-choice";
+        button.setAttribute("aria-label", `Select picture ${i + 1}`);
+        button.setAttribute("aria-pressed", "false");
+        const img = document.createElement("img"); img.src = photo.url; img.alt = `Picture ${i + 1}`; img.loading = "lazy";
+        const label = document.createElement("span"); label.textContent = `Picture ${i + 1}`;
+        button.append(img, label);
+        button.addEventListener("click", () => {
+          if (libraryBusy) return;
+          if (slot) {
+            selectedLibraryPhotos.clear();
+            $$(".picture-choice", $("#picture-library-grid")).forEach(choice => choice.setAttribute("aria-pressed", "false"));
+          }
+          if (selectedLibraryPhotos.has(photo.name)) selectedLibraryPhotos.delete(photo.name);
+          else selectedLibraryPhotos.set(photo.name, photo);
+          button.setAttribute("aria-pressed", String(selectedLibraryPhotos.has(photo.name)));
+          libraryButton.disabled = selectedLibraryPhotos.size === 0;
+        });
+        $("#picture-library-grid").append(button);
+      });
+    } catch (error) { $("#picture-library-status").textContent = error.message; }
+  }
+  $("#add-opening-from-folder").addEventListener("click", () => openPictureLibrary(null, "opening gallery"));
+  libraryButton.addEventListener("click", async () => {
+    if (libraryBusy) return;
+    libraryBusy = true;
+    libraryButton.disabled = true;
+    let saved = 0;
+    try {
+      for (const photo of [...selectedLibraryPhotos.values()]) {
+        const response = await fetch(photo.url, { cache: "no-store" });
+        if (!response.ok) throw new Error("Could not open that photograph. Please choose it again.");
+        await saveLocalPhoto(librarySlot || `opening-${crypto.randomUUID()}`, "PUT", await response.blob());
+        saved++;
+      }
+      $("#picture-library-dialog").close();
+      $("#editor-status").textContent = librarySlot ? "Photograph replaced and saved in the project." : `${saved} opening photographs added and saved in the project.`;
+      toast(librarySlot ? "Photograph replaced." : `${saved} photographs added.`);
+    } catch (error) {
+      $("#picture-library-status").textContent = `${saved} saved. ${error.message}`;
+    } finally { libraryBusy = false; libraryButton.disabled = selectedLibraryPhotos.size === 0; }
   });
   updateLocalPhotoSettings();
   if (new URL(location.href).searchParams.get("photos") === "edit") {
@@ -909,7 +1010,7 @@ function paintCameraAccess() {
         : "Capture has ended. Your roll develops on 20 December at noon, Philippine time."
       : phase === "unavailable"
         ? "Reconnect so we can confirm access to the wedding-day camera."
-        : "24 frames, from midnight to midnight on our wedding day. Philippine time.";
+        : `${FILM_LIMIT} frames, from midnight to midnight on our wedding day. Philippine time.`;
   $("#retry-camera-clock").hidden = phase !== "unavailable";
   $("#open-developed-film").hidden = !filmIsDeveloped(now);
   const left = Math.max(0, CAMERA_OPENS_AT - now);

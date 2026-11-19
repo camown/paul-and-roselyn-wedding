@@ -1,4 +1,4 @@
-export const FILM_LIMIT = 24;
+export const FILM_LIMIT = 12;
 import { cameraPhase, REVEAL_AT } from "../../shared/event-window.mjs";
 // Local preview setting. Production reveal must be enforced by the server.
 export const FILM_REVEAL_AT = REVEAL_AT;

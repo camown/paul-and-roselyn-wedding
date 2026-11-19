@@ -2,7 +2,7 @@
 
 ## Recommendation
 
-Build a responsive website opened from a personal invitation link, with an optional home-screen shortcut later. Do not require an app-store download or a guest password. A guest opens the invitation, confirms their name, RSVPs, and receives a 24-shot camera. Hosts sign in; guests hold an invitation-scoped session. Each person should have an invitation if they need their own roll; a household invitation deliberately shares seats and a roll.
+Build a responsive website opened from a personal invitation link, with an optional home-screen shortcut later. Do not require an app-store download or a guest password. A guest opens the invitation, confirms their name, RSVPs, and receives a 12-shot camera. Hosts sign in; guests hold an invitation-scoped session. Each person should have an invitation if they need their own roll; a household invitation deliberately shares seats and a roll.
 
 This follows established product patterns: [GUESTPIX](https://help.guestpix.com/article/153-start-here-welcome-to-guestpix) uses browser-based event galleries, [POV](https://pov.camera/use-cases/weddings) offers limited guest rolls and delayed reveal, and [WedPOV](https://wedpov.com/how-it-works) combines an invitation, RSVP, camera, and approved gallery. The public [photo-booth repository](https://github.com/kaungsetlin3013/photo-booth) demonstrates a mobile camera with Supabase; it is a reference, not an audited security foundation or code copied into this project.
 
@@ -12,7 +12,7 @@ Update, 19 November 2026: the user's Supabase project is `vmstqqfmwkisyzwrlftw`;
 
 The SQL migration in `supabase/migrations/202611160001_wedding_foundation.sql` is a foundation for a future hosted backend. It is not applied to Supabase, and is not connected to the browser prototype. Its redemption, RSVP and photo-reservation functions are server-only. They do not implement a full upload pipeline, host dashboard, rate limiter, scheduled deletion, authorization provider, invitation distribution, or backup system. Do not describe local browser storage as a shared database or a confirmed RSVP to the couple.
 
-The former `api/rsvp.js` used process memory and exposed guest data to unauthenticated GET requests. The rebuild now fails closed with HTTP 503 for every method. Replace that disabled route with authorized, persistent endpoints before sending real invitations.
+The former `api/rsvp.js` used process memory and exposed guest data to unauthenticated GET requests. GET now exposes only an enabled flag. Writes fail closed until the private Google Sheets receiver is authorized and configured; see [setup and boundaries](google-sheets-rsvp.md). This open-form adapter is not the planned invitation-scoped authentication system.
 
 ## Hosting and data layout
 
@@ -90,7 +90,7 @@ Supabase database backups [exclude Storage object contents](https://supabase.com
 
 ## Scale and reliability budget
 
-Planning scenario, not a benchmark: 300 guests × 24 shots = 7,200 images. At 1 MB each, allow about 7.2 GB of image payload plus thumbnails, processing copies, and backup capacity (budget 10–15 GB for the active set). At the 6 MiB worst-case cap, 7,200 uploads can exceed 45 GB. Gallery egress may exceed stored volume when many guests browse; pagination, 320/640 px thumbnails, lazy loading and explicit original downloads matter more than database row count.
+Planning scenario, not a benchmark: 300 guests × 12 shots = 3,600 images. At 1 MB each, allow about 3.6 GB of image payload plus thumbnails, processing copies, and backup capacity (budget 5–8 GB for the active set). At the 6 MiB worst-case cap, 3,600 uploads can exceed 22 GB. Gallery egress may exceed stored volume when many guests browse; pagination, 320/640 px thumbnails, lazy loading and explicit original downloads matter more than database row count.
 
 The static invitation should ship optimized images and avoid loading the gallery until requested. Fifty simultaneous 1 MB uploads are about 50 MB in flight; direct Storage upload keeps them away from Vercel body limits. Add shared per-session and per-IP rate limits, recognizing many guests share venue Wi-Fi. Do not keep quotas or limits in process memory. Start without realtime subscriptions; bounded foreground polling is enough for processing status. Use a unique `(invitation_id, client_id)` key and invitation row locks for consistency. Check current Supabase/Vercel plan storage, egress, function and image-processing limits before choosing a paid tier; no price or capacity guarantee is implied here.
 
@@ -107,14 +107,14 @@ Before wedding day, run an authorized staging load test for expected concurrency
 
 ## Required database and integration checks
 
-The foundation must pass: application of the migration in an empty Supabase-compatible database; denial of table and RPC access as `anon`/`authenticated`; service-role redemption of valid invitations; invalid/expired/revoked invitation rejection; concurrent redemption device cap; concurrent reservations at a 24-photo limit; stable idempotent retry; expired reservation release; rejected/deleted photos still consuming quota; server-time camera window enforcement; own-invitation RSVP update and seat-limit rejection. Full Supabase Storage/Auth integration and the remaining server routes require a real staging project before release.
+The foundation must pass: application of the migration in an empty Supabase-compatible database; denial of table and RPC access as `anon`/`authenticated`; service-role redemption of valid invitations; invalid/expired/revoked invitation rejection; concurrent redemption device cap; concurrent reservations at a 12-photo limit; stable idempotent retry; expired reservation release; rejected/deleted photos still consuming quota; server-time camera window enforcement; own-invitation RSVP update and seat-limit rejection. Full Supabase Storage/Auth integration and the remaining server routes require a real staging project before release.
 
 Local verification completed November 16, 2026 with PostgreSQL 17.2 and stub Supabase platform schemas/roles: the migration applied successfully, and `supabase/tests/foundation.sql` passed its permission, redemption/device-cap, quota/idempotency, expired-slot, deletion-quota, RSVP/allocation, closed-camera and revoked-invitation assertions. Two additional local `pgbench` runs used 24 clients and 72 attempts each: a two-shot quota produced exactly two rows, and a one-device invitation produced exactly one session. Expected full-roll/device-limit rejections were handled by test wrappers; these figures verify consistency, not cloud performance. The isolated local test server was stopped after checks. No production project, account, migration, or deployment was changed. Invalid session, expired invitation, and real Auth/Storage end-to-end cases still belong in the staging release suite.
 
 
 ## Capture-only product update
 
-The guest camera is now capture-only: no file picker, camera-roll import, individual deletion or retake. The browser UI shows numbered exposed frames and hides photos until the local preview reveal (20 December 2026, noon Asia/Manila). An atomic IndexedDB transaction maintains a per-device 24-exposure ledger even if individual photo objects disappear. Full-roll UI stops the camera. Host photo replacement remains available separately.
+The guest camera is now capture-only: no file picker, camera-roll import, individual deletion or retake. The browser UI shows numbered exposed frames and hides photos until the local preview reveal (20 December 2026, noon Asia/Manila). An atomic IndexedDB transaction maintains a per-device 12-exposure ledger even if individual photo objects disappear. Full-roll UI stops the camera. Host photo replacement remains available separately.
 
 This changes the earlier file-picker fallback: when permission is denied or a camera is unavailable, guests get instructions to allow the camera or open the invitation on a supported phone. Do not reintroduce photo-library imports as a fallback. Keep privacy export and erasure available.
 
