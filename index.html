@@ -126,6 +126,9 @@
             alt="Paul and Roselyn together"
             fetchpriority="high"
           />
+          <button class="photo-open" data-lightbox="hero" aria-label="Enlarge cover photograph">
+            <span class="photo-open-icon" data-icon="expand"></span>
+          </button>
           <figcaption>
             <span>Our next chapter</span><span>12.19.26</span>
           </figcaption>
@@ -139,6 +142,9 @@
               alt="Another memory of Paul and Roselyn together"
             />
             <span>Us, since 2017.</span>
+            <button class="photo-open" data-lightbox="gallery3" aria-label="Enlarge the small opening photograph">
+              <span class="photo-open-icon" data-icon="expand"></span>
+            </button>
           </div>
         </figure>
         <span class="hero-side-note" aria-hidden="true"
@@ -162,6 +168,9 @@
             alt="A memory of Paul and Roselyn"
             loading="lazy"
           /><span class="photo-caption">Us, through the years.</span>
+          <button class="photo-open" data-lightbox="story" aria-label="Enlarge our story photograph">
+            <span class="photo-open-icon" data-icon="expand"></span>
+          </button>
         </div>
         <div class="story-copy">
           <p class="eyebrow">Our story</p>
@@ -260,7 +269,7 @@
               <span class="attire-formality"
                 >SEMI-FORMAL · DAYTIME CELEBRATION</span
               >
-              <p>A little dressed up, in the warm shades of our day.</p>
+              <p>Guests are welcome in rust, brown, khaki or beige.</p>
               <div class="palette">
                 <p class="small-label">OUR COLOURS</p>
                 <div class="swatches">
@@ -296,6 +305,11 @@
               </div>
             </div>
           </div>
+          <p class="sponsor-preference">
+            <strong>For our principal sponsors:</strong> formal or semi-formal
+            attire, preferably Barong Tagalog for our Ninong and Filipiniana
+            for our Ninang.
+          </p>
           <div class="outfit-guide">
             <article class="outfit">
               <div class="outfit-art">
@@ -307,19 +321,19 @@
               </div>
               <p class="eyebrow">For our Ninong</p>
               <h3>Barong Tagalog</h3>
-              <p>With dress trousers and formal shoes.</p>
+              <p>Our preferred attire for Ninong, with dress trousers and formal shoes.</p>
             </article>
             <article class="outfit">
               <div class="outfit-art">
                 <img
-                  src="/assets/images/attire-gown.svg"
-                  alt="A rust floor-length gown with a softly pleated skirt"
+                  src="/assets/images/attire-filipiniana.svg"
+                  alt="A rust Filipiniana gown with structured butterfly sleeves and a floor-length skirt"
                   loading="lazy"
                 />
               </div>
               <p class="eyebrow">For our Ninang</p>
-              <h3>A floor-length gown</h3>
-              <p>In a shade from our wedding palette.</p>
+              <h3>Filipiniana</h3>
+              <p>Our preferred attire for Ninang, in our wedding palette.</p>
             </article>
             <article class="outfit">
               <div class="outfit-art">
@@ -332,8 +346,9 @@
               <p class="eyebrow">For our guests</p>
               <h3>Effortlessly dressed</h3>
               <p>
-                A midi or cocktail dress, dressy separates, or a collared shirt
-                with tailored trousers.
+                Semi-formal attire in any of our four colours: rust, brown,
+                khaki or beige. A midi or cocktail dress, dressy separates,
+                or a collared shirt with tailored trousers.
               </p>
             </article>
           </div>
@@ -530,11 +545,10 @@
         ><button class="text-button" data-open="privacy-dialog">Privacy</button
         ><button
           id="dev-button"
-          class="icon-button"
+          class="local-photos-button"
           aria-label="Open development photo settings"
-          data-icon="settings"
           hidden
-        ></button>
+        ><span data-icon="settings"></span><span>Photos</span></button>
       </div>
     </footer>
     <dialog
@@ -664,8 +678,15 @@
         data-close
         aria-label="Close enlarged photo"
         data-icon="close"
-      ></button
-      ><img id="enlarged-photo" alt="Enlarged memory" />
+      ></button>
+      <button class="icon-button photo-previous" id="photo-previous" aria-label="Previous photograph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg>
+      </button>
+      <div class="photo-stage"><img id="enlarged-photo" alt="Enlarged memory" /></div>
+      <button class="icon-button photo-next" id="photo-next" aria-label="Next photograph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg>
+      </button>
+      <p class="photo-position" id="photo-position" role="status" aria-live="polite"></p>
     </dialog>
     <dialog aria-label="Development photo settings" id="dev-dialog">
       <div class="dialog-header">

@@ -15,7 +15,7 @@ The deployment uses Vercel's standard Vite build and Node.js functions in `api/`
 
 ## Deployment checks
 
-- Open the landing on phone and desktop. Test the sealed opening, menu, RSVP preview, calendar and gallery.
+- Open the landing on phone and desktop. The sealed opening must land on the invitation card at the top; test footer replay and Escape too. Test the menu, RSVP preview, calendar and gallery (including opening photos, previous/next, keyboard and touch swipe).
 - `GET /api/event-status` must return JSON with `serverNow`, the fixed schedule and `Cache-Control: private, no-store`. Before 19 December 2026 Philippine time, the phase must be `scheduled`; the header camera icon is hidden, and camera permission is never requested. `POST` returns 405.
 - `/api/rsvp` deliberately returns 503 until durable guest-scoped storage is configured. An RSVP saved in this revision is only a device-local preview; it is not delivered to the couple.
 - Camera capture is available only from 19 December 00:00 to 20 December 00:00 Asia/Manila; developed viewing starts 20 December at noon. Browser-local photos and limits remain a demonstration, not secure cloud authorization.

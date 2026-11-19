@@ -26,11 +26,11 @@ The Vite development server provides `/api/event-status`; Vercel will use `api/e
 ## Implemented locally
 
 - Coordinated rust silk and embossed floral stationery across the entire invitation, self-hosted Bodoni Moda / Italianno / DM Sans, responsive layouts and native dialogs.
-- Wedding schedule, Google Maps/Waze links, downloadable calendar invitation, dress palette and photo lightboxes.
+- Wedding schedule, Google Maps/Waze links, downloadable calendar invitation, four-colour attire guide and photo gallery with previous/next arrows, keyboard navigation and touch swipe. Opening and story photographs also open the gallery.
 - Editable **preview** RSVP stored in IndexedDB; acceptance, decline and seat selection. This is not delivered to the couple.
 - Capture-only disposable camera: 24 exposures, compressed JPEGs, no library imports, retakes or individual deletion. Capture opens only on 19 December 2026, midnight to midnight Philippine time. Server time anchors the UI and local write guard; stale or unavailable time keeps capture locked. Frames stay concealed until 20 December at noon Philippine time in a separate viewer. No photo is sent to a cloud service.
 - Privacy controls export/delete this browser’s preview data. Exports contain ordinary JPEG files and a JSON manifest in a ZIP archive.
-- Development photo settings: use the gear icon in the footer. Replace cover, story and three gallery images. Changes persist under `public/content` on D: and ship with the next build. Restore controls revert individual slots. This editor is loopback development tooling, not a production admin login.
+- Development photo settings: use the visible floating **Photos** button on localhost, or open `http://127.0.0.1:3000/?photos=edit` directly. Replace cover, story and three gallery images. Changes persist under `public/content` on D: and ship with the next committed build. Restore controls revert individual slots. This editor is loopback development tooling, not a production admin login.
 
 Real iOS/Android camera compatibility must be verified before invitations are sent. Browser storage can be evicted; it is not a backup. The local 24-shot demonstration is not a secure cross-device quota.
 

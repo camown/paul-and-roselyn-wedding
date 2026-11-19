@@ -14,10 +14,13 @@ const barong =
 <g stroke="#a18a64"><path d="m119 49 17-12h28l16 12-22 26-8-14-8 14Z" fill="#e4d1ae"/><path d="m150 61 1 130M142 75l2 116h14l1-116M105 109l-3-28m91 28 4-28M65 179l22 7m126 0 23-7M101 209q49 10 97 0"/><path d="M111 96v101m78-101v101" stroke-dasharray="1 4"/><g transform="translate(150 88) scale(.68)">${embroidery}</g><path d="m120 122 8-7m-8 20 8-7m46-6 7-7m-7 20 7-7"/><circle cx="150" cy="92" r="1"/><circle cx="150" cy="111" r="1"/><circle cx="150" cy="130" r="1"/></g>
 <path fill="#3b2d23" d="m104 325-10 12q13 5 40 0l-1-13m24 0-1 13q28 5 39 0l-8-12"/><path d="M80 347h142" stroke="#d6ad7e55"/>` +
   end;
-const gown =
+const filipiniana =
   start +
-  `<path d="M127 31q23-18 46 0m-23-14v-9"/><path fill="#ad6348" stroke="#dfb28b" d="m125 52-5 22q-4 17 14 39l-8 42q-22 59-53 176q76 15 154 0-31-115-54-176l-8-42q18-22 14-39l-5-22-11 14q-13 9-27 0Z"/>
-<path stroke="#e2bba0" d="m126 53 3 29 21 18 21-18 3-29m-40 61q16 9 31 0m-39 41q24 10 48 0m-37 6-26 165m39-163v168m13-170 25 166M129 174 91 329m82-157 37 157m-83-239 12 19m34-19-12 19M111 266l-7 48m91-48 8 48"/><path d="M70 347h160" stroke="#d6ad7e55"/>` +
+  `<path d="M127 31q23-18 46 0m-23-14v-9"/>
+<path fill="#ad6348" stroke="#dfb28b" d="M127 59q23 13 46 0l12 38-20 37 8 29 39 167q-62 17-124 0l39-167 8-29-20-37Z"/>
+<path fill="#b97254" stroke="#dfb28b" d="M128 60C114 39 94 51 83 78l5 37 31-10 13-24Zm44 0c14-21 34-9 45 18l-5 37-31-10-13-24Z"/>
+<g stroke="#e2bba0"><path d="m128 62 9 23q13 9 26 0l9-23m-37 72q15 7 30 0m-38 29q23 9 46 0m-34 9-27 154m38-151v158m12-161 27 154m-60-143-26 145m68-145 26 145M88 78q13-10 31-10m93 10q-13-10-31-10M91 87l11 21m-2-35 11 32m98-18-11 21m2-35-11 32"/>
+<path d="m139 107 11-7 11 7-11 8Zm0 15 11-7 11 7-11 8M143 189l7-5 7 5-7 6Zm-5 31 12-8 12 8-12 9Zm-7 34 19-12 19 12-19 13Z" stroke="#d8ad7c"/></g><path d="M70 347h160" stroke="#d6ad7e55"/>` +
   end;
 const guests =
   start +
@@ -28,7 +31,7 @@ const guests =
   end;
 for (const [name, svg] of [
   ["barong", barong],
-  ["gown", gown],
+  ["filipiniana", filipiniana],
   ["guests", guests],
 ])
   await writeFile(

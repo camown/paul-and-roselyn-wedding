@@ -193,12 +193,27 @@ $$("dialog").forEach((dialog) => {
   });
   dialog.addEventListener("close", () => {
     if (dialog.id === "camera-dialog") stopCamera();
+    // The invitation deliberately lands on the card, including after a footer replay.
+    if (dialog.id === "invitation-gate") return;
     dialogFocus.get(dialog)?.focus();
   });
 });
 const invitationGate = $("#invitation-gate");
 let invitationOpening = false;
 let invitationTimers = [];
+function focusInvitationCard() {
+  if (document.querySelector("dialog[open]")) return;
+  $(".hero h1").focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+function closeInvitationEnvelope() {
+  if (invitationGate.open) invitationGate.close();
+  focusInvitationCard();
+}
+invitationGate.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeInvitationEnvelope();
+});
 function showInvitationEnvelope() {
   invitationTimers.forEach(clearTimeout);
   invitationTimers = [];
@@ -222,7 +237,7 @@ $("#open-invitation").addEventListener("click", () => {
   invitationTimers.push(
     setTimeout(
       () => {
-        if (invitationGate.open) invitationGate.close();
+        closeInvitationEnvelope();
       },
       reducedMotion ? 0 : 1350,
     ),
@@ -234,8 +249,7 @@ invitationGate.addEventListener("close", () => {
   try {
     sessionStorage.setItem("pr-invitation-opened", "yes");
   } catch {}
-  $(".hero h1").focus({ preventScroll: true });
-  window.scrollTo({ top: 0, behavior: "instant" });
+  focusInvitationCard();
 });
 $("#replay-invitation").addEventListener("click", showInvitationEnvelope);
 let invitationAlreadyOpened = false;
@@ -260,15 +274,48 @@ function requestConfirmation(message) {
 $("#confirm-delete").addEventListener("click", () =>
   $("#confirm-dialog").close("confirm"),
 );
-$$("[data-lightbox]").forEach((button) =>
+const gallerySlots = ["hero", "story", "gallery1", "gallery2", "gallery3"];
+const galleryLabels = ["Our next chapter", "Us, through the years", "Together", "Through the years", "Always you"];
+let galleryIndex = 0;
+function showGalleryPhoto(index) {
+  galleryIndex = (index + gallerySlots.length) % gallerySlots.length;
+  const source = $(`[data-photo="${gallerySlots[galleryIndex]}"]`);
+  $("#enlarged-photo").src = source.src;
+  $("#enlarged-photo").alt = source.alt;
+  $("#photo-position").textContent = `${galleryLabels[galleryIndex]} · ${galleryIndex + 1} / ${gallerySlots.length}`;
+}
+$$("[data-lightbox]").forEach((button) => {
   button.addEventListener("click", () => {
-    $("#enlarged-photo").src = $(
-      `[data-photo="${button.dataset.lightbox}"]`,
-    ).src;
-    $("#enlarged-photo").alt = $("img", button).alt;
+    showGalleryPhoto(gallerySlots.indexOf(button.dataset.lightbox));
     openDialog("photo-dialog");
-  }),
-);
+  });
+});
+$("#photo-previous").addEventListener("click", () => showGalleryPhoto(galleryIndex - 1));
+$("#photo-next").addEventListener("click", () => showGalleryPhoto(galleryIndex + 1));
+const photoDialog = $("#photo-dialog");
+photoDialog.addEventListener("keydown", (event) => {
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  showGalleryPhoto(galleryIndex + (event.key === "ArrowRight" ? 1 : -1));
+});
+let photoSwipe = null;
+photoDialog.addEventListener("pointerdown", (event) => {
+  if (event.pointerType !== "touch" || !event.isPrimary || event.target.closest("button")) return;
+  photoSwipe = { id: event.pointerId, x: event.clientX, y: event.clientY };
+});
+window.addEventListener("pointerup", (event) => {
+  if (!photoSwipe || photoSwipe.id !== event.pointerId) return;
+  const dx = event.clientX - photoSwipe.x;
+  const dy = event.clientY - photoSwipe.y;
+  photoSwipe = null;
+  if (photoDialog.open && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.25)
+    showGalleryPhoto(galleryIndex + (dx < 0 ? 1 : -1));
+});
+window.addEventListener("pointercancel", () => { photoSwipe = null; });
+photoDialog.addEventListener("close", () => {
+  photoSwipe = null;
+  $("#enlarged-photo").removeAttribute("src");
+});
 $$("[data-color]").forEach((button) =>
   button.addEventListener("click", async () => {
     try {
@@ -726,6 +773,10 @@ if (import.meta.env.DEV) {
     $("#photo-settings").append(row);
   });
   applyPhotos();
+  if (new URL(location.href).searchParams.get("photos") === "edit") {
+    if (invitationGate.open) invitationGate.close();
+    openDialog("dev-dialog");
+  }
 }
 
 // A trusted wall-clock anchor plus monotonic elapsed time: phone date changes do not unlock capture.

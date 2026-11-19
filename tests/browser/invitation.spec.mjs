@@ -278,6 +278,76 @@ test("restyled invitation controls remain usable on a phone", async ({ page }) =
   await expect(page.getByLabel("Regretfully declines", { exact: true })).toBeChecked();
 });
 
+for (const width of [390, 1440]) test("opening photos support gallery arrows, keys and swipe at " + width + "px", async ({ page }) => {
+  await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+  await prepare(page);
+  await enter(page);
+  const cover = page.getByRole("button", { name: "Enlarge cover photograph", exact: true });
+  await cover.click();
+  await expect(page.locator("#photo-dialog")).toBeVisible();
+  await expect(page.locator("#photo-position")).toContainText("1 / 5");
+  await page.getByRole("button", { name: "Previous photograph", exact: true }).click();
+  await expect(page.locator("#photo-position")).toContainText("5 / 5");
+  await page.getByRole("button", { name: "Next photograph", exact: true }).click();
+  await expect(page.locator("#photo-position")).toContainText("1 / 5");
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("#photo-position")).toContainText("2 / 5");
+  const stage = page.locator(".photo-stage");
+  await stage.dispatchEvent("pointerdown", { pointerId: 1, pointerType: "touch", isPrimary: true, clientX: 270, clientY: 230 });
+  await stage.dispatchEvent("pointerup", { pointerId: 1, pointerType: "touch", isPrimary: true, clientX: 100, clientY: 235 });
+  await expect(page.locator("#photo-position")).toContainText("3 / 5");
+  await stage.dispatchEvent("pointerdown", { pointerId: 2, pointerType: "touch", isPrimary: true, clientX: 200, clientY: 230 });
+  await stage.dispatchEvent("pointerup", { pointerId: 2, pointerType: "touch", isPrimary: true, clientX: 195, clientY: 400 });
+  await expect(page.locator("#photo-position")).toContainText("3 / 5");
+  const bounds = await page.locator("#photo-dialog").boundingBox();
+  expect(bounds.x).toBeGreaterThanOrEqual(0);
+  expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+  await page.screenshot({ path: "docs/screenshots/gallery-viewer-" + width + ".jpg", quality: 85 });
+  await page.keyboard.press("Escape");
+  await expect(cover).toBeFocused();
+  await page.getByRole("button", { name: "Enlarge the small opening photograph", exact: true }).click();
+  await expect(page.locator("#photo-position")).toContainText("5 / 5");
+  await page.getByRole("button", { name: "Close enlarged photo", exact: true }).click();
+  await expect(page.locator("#photo-dialog")).not.toBeVisible();
+});
+
+test("local photo shortcut opens the editor with five replacement slots", async ({ page }) => {
+  await prepare(page);
+  await page.goto("/?photos=edit");
+  await expect(page.locator("#dev-dialog")).toBeVisible();
+  await expect(page.locator("#invitation-gate")).not.toBeVisible();
+  await expect(page.locator("#photo-settings input[type=file]")).toHaveCount(5);
+  await page.getByRole("button", { name: "Close photo settings", exact: true }).click();
+  await expect(page.locator("#dev-button")).toBeVisible();
+  await page.locator("#dev-button").click();
+  await expect(page.locator("#dev-dialog")).toBeVisible();
+});
+
+for (const width of [320, 390, 768, 1440]) test("first visit and replay land on the centered invitation at " + width + "px", async ({ page }) => {
+  const height = width === 320 ? 720 : width === 390 ? 844 : 1000;
+  await page.setViewportSize({ width, height });
+  await prepare(page);
+  await page.goto("/#rsvp");
+  await page.evaluate(() => document.fonts.ready);
+  const card = await page.locator(".invitation-opening").boundingBox();
+  const viewportWidth = await page.evaluate(() => document.documentElement.clientWidth);
+  expect(Math.abs(card.x + card.width / 2 - viewportWidth / 2)).toBeLessThan(4);
+  expect(card.y).toBeGreaterThanOrEqual(0);
+  expect(card.y + card.height).toBeLessThanOrEqual(height + 1);
+  await page.getByRole("button", { name: "Open your invitation", exact: true }).click();
+  await expect(page.locator("#invitation-gate")).not.toBeVisible();
+  await expect(page.locator(".hero h1")).toBeFocused();
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(page.getByRole("link", { name: "Celebrate with us", exact: false })).toBeInViewport();
+  await page.getByRole("link", { name: "Celebrate with us", exact: false }).click();
+  await expect(page).toHaveURL(/#rsvp$/);
+  await page.locator("#replay-invitation").click();
+  await expect(page.locator("#invitation-gate")).toBeVisible();
+  await page.getByRole("button", { name: "Open your invitation", exact: true }).click();
+  await expect(page.locator("#invitation-gate")).not.toBeVisible();
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+});
+
 for (const [width, height] of [
   [320, 720],
   [390, 844],
@@ -318,6 +388,7 @@ for (const [width, height] of [
           await page.screenshot({ path: "docs/screenshots/suite-" + id + "-" + width + ".jpg", quality: 85 });
         }
         await page.screenshot({ path: "docs/screenshots/suite-full-" + width + ".jpg", fullPage: true, quality: 80 });
+        await expect.poll(() => page.locator("main img").evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0))).toBe(true);
       }
     },
   );
