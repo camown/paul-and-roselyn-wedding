@@ -4,9 +4,13 @@ Destination: [the couple’s spreadsheet](https://docs.google.com/spreadsheets/d
 
 The website sends replies through Vercel to a Google Apps Script receiver. Guests cannot read the sheet or see the receiver secret. A dedicated `Website RSVPs` tab stores reply ID, Philippine timestamp, name, attendance, seats, dietary notes and message. Existing tabs remain untouched. Repeated submissions from the same browser update the same reply ID. Clearing browser storage or changing devices creates another ID; this is not invitation authentication or a verified seat entitlement.
 
-## Owner authorization (not completed yet)
+## Live connection — verified 19 November 2026
 
-Prepared in the signed-in browser: [Paul & Roselyn · Private RSVPs](https://script.google.com/u/0/home/projects/1jImKPNK3QmnLPzVhyk5m-2XHKy4p-uJG_4ekNZmG2gXpD9vxjBfK026h/edit). Code is saved; no deployment, secret, Google authorization or sheet write has been performed. The spreadsheet's general access was changed from Anyone with the link (Editor) to Restricted and verified Private to only me.
+Authorized and deployed in the signed-in browser: [Paul & Roselyn · Private RSVPs](https://script.google.com/u/0/home/projects/1jImKPNK3QmnLPzVhyk5m-2XHKy4p-uJG_4ekNZmG2gXpD9vxjBfK026h/edit). Google authorization was approved by the owner. Its Sheets scope permits access across the owner's spreadsheets; the receiver code uses only the fixed wedding-sheet ID. The spreadsheet's general access is Restricted, verified Private to only me. Only the secret-validated receiver is callable without a Google login.
+
+All three server settings are saved as Vercel Production secrets. Preview and local development remain device-only previews. A live website submission appeared in `Website RSVPs`; changing attendance to decline updated the same row with zero seats. A separate direct receiver retry/update test also produced one row. Both clearly marked synthetic test entries were removed after verification; the header and formatting remain. No real guest data was used. Browser-local deletion does not delete a previously delivered sheet row.
+
+## Setup / recovery instructions
 
 1. In that spreadsheet, open **Extensions → Apps Script**. Paste [Code.gs](../integrations/google-sheets/Code.gs). Review the fixed sheet ID and destination tab.
 2. Generate a random secret of at least 32 characters in a password manager. In Apps Script **Project Settings → Script Properties**, add `RSVP_SECRET` with that value. Never paste the secret into chat or public code.
@@ -17,7 +21,7 @@ Prepared in the signed-in browser: [Paul & Roselyn · Private RSVPs](https://scr
    - `RSVP_SITE_ORIGIN`: `https://paul-and-roselyn-wedding.vercel.app` (no trailing slash).
 5. Redeploy. Submit a clearly marked synthetic test reply, verify the actual row in the private sheet, update it, and confirm one row remains. Remove the synthetic row afterward. Script updates require a new version under **Manage deployments**.
 
-No Google authorization or real sheet write has been performed by preparing these files. Until all settings exist, the site continues to label its form as a local preview. A configured receiver still needs the live write/update test before guests use it.
+If any settings are missing, the site labels its form as a local preview. After changing the receiver or settings, repeat the live write/update test before guests use it.
 
 ## Boundaries
 

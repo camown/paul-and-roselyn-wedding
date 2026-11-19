@@ -405,6 +405,8 @@ const rsvpModeReady = (async () => {
   } catch { /* The local Vite preview has no configured RSVP service. */ }
   if (deliverRsvp) {
     $(".mode-notice", form).textContent = "Your reply will be sent privately to Paul & Roselyn.";
+    $("#privacy-storage-notice").textContent = "When you send an RSVP, your name, attendance, guest count, dietary note and message are saved in Paul & Roselyn’s private Google spreadsheet. A copy stays in this browser so you can update it. Camera photos still stay on this device and are not sent to the couple.";
+    $("#privacy-device-notice").textContent = "These controls export or remove this device’s copy only. They do not delete a reply already received by the couple. Contact Paul & Roselyn to correct or remove the shared reply. Avoid including sensitive medical information in dietary notes.";
     $('button[type="submit"]', form).firstChild.textContent = "Send our reply ";
   }
 })();
@@ -738,7 +740,7 @@ $("#export-data").addEventListener("click", async () => {
 $("#clear-data").addEventListener("click", async () => {
   if (
     !(await requestConfirmation(
-      "Delete this browser’s preview reply and photos? Export a copy first if you want to keep them.",
+      deliverRsvp ? "Delete this browser’s reply copy and photos? Your reply in the couple’s spreadsheet will remain. Export a copy first if you want to keep the device data." : "Delete this browser’s preview reply and photos? Export a copy first if you want to keep them.",
     ))
   )
     return;
@@ -749,10 +751,10 @@ $("#clear-data").addEventListener("click", async () => {
     attendanceChanged();
     $("#rsvp-status").textContent = "";
     $('button[type="submit"]', form).firstChild.textContent =
-      "Save preview reply ";
+      deliverRsvp ? "Send our reply " : "Save preview reply ";
     await renderRoll();
     $("#privacy-status").textContent =
-      "Your preview reply and photos have been deleted from this browser.";
+      deliverRsvp ? "This device’s copy has been deleted. Any reply already received by the couple remains in their spreadsheet." : "Your preview reply and photos have been deleted from this browser.";
     toast("Device preview data deleted.");
   } catch (error) {
     $("#privacy-status").textContent = error.message;

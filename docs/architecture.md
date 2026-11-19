@@ -8,6 +8,8 @@ This follows established product patterns: [GUESTPIX](https://help.guestpix.com/
 
 ## Status and boundaries
 
+Production update, 19 November 2026: the private Google Sheets RSVP adapter is authorized and verified from the live website, including repeated same-ID updates without duplicate rows. See [connection and maintenance](google-sheets-rsvp.md). This is an open RSVP form; the invitation-scoped identity and cloud-camera system below remain planned. Camera quota is now 12 exposures; a follow-up migration caps future database rolls at 12 but has not been applied to a live database.
+
 Update, 19 November 2026: the user's Supabase project is `vmstqqfmwkisyzwrlftw`; the publishable connection is verified and a Vite browser client is configured. Codex MCP OAuth is authenticated, but the live schema and server-side guest flows below have not yet been applied/connected. Earlier local-only statements describe the initial implementation. The public client is for future host Auth; it does not bypass the server-only wedding tables.
 
 The SQL migration in `supabase/migrations/202611160001_wedding_foundation.sql` is a foundation for a future hosted backend. It is not applied to Supabase, and is not connected to the browser prototype. Its redemption, RSVP and photo-reservation functions are server-only. They do not implement a full upload pipeline, host dashboard, rate limiter, scheduled deletion, authorization provider, invitation distribution, or backup system. Do not describe local browser storage as a shared database or a confirmed RSVP to the couple.

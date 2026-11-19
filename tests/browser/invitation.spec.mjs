@@ -73,6 +73,8 @@ test("RSVP delivery confirms only acknowledged replies and retries the same repl
     return route.fulfill(fail ? { status: 502, json: { error: "Could not confirm your reply. Please retry." } } : { json: { saved: true, id: reply.id } });
   });
   await enter(page);
+  await expect(page.locator("#privacy-storage-notice")).toContainText("private Google spreadsheet");
+  await expect(page.locator("#privacy-device-notice")).toContainText("do not delete a reply already received");
   await page.getByLabel("Your name", { exact: true }).fill("Test guest");
   await page.getByLabel("Joyfully accepts", { exact: true }).check();
   await page.getByRole("button", { name: "Send our reply", exact: false }).click();

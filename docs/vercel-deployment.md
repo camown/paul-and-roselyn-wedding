@@ -1,6 +1,6 @@
 # Vercel deployment
 
-This revision can be hosted as an invitation preview. The shared RSVP service, guest authentication and cloud photo storage are not connected. Do not distribute it as the finished guest system until the production integration in `architecture.md` is complete.
+Production RSVP delivery to the private Google spreadsheet is connected and verified; see [maintenance and test evidence](google-sheets-rsvp.md). Guest authentication and cloud camera-photo storage are not connected. Do not describe the camera preview as a finished shared guest system until the remaining integration in `architecture.md` is complete.
 
 ## Import from GitHub
 
