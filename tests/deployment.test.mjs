@@ -4,6 +4,7 @@ import { cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { createServer } from "node:http";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { isPhotoSlot } from "../shared/photo-slots.mjs";
 
 const config = JSON.parse(await readFile("vercel.json", "utf8"));
 
@@ -53,9 +54,8 @@ test("isolated function package serves the event clock and preserves fail-closed
 
 test("production photo manifest points only to existing published content", async () => {
   const manifest = JSON.parse(await readFile("dist/content/photos.json", "utf8"));
-  const allowed = new Set(["hero", "story", "gallery1", "gallery2", "gallery3"]);
   for (const [slot, ref] of Object.entries(manifest)) {
-    assert.ok(allowed.has(slot));
+    assert.ok(isPhotoSlot(slot));
     assert.match(ref, /^\/content\/[a-zA-Z0-9_-]+\.(?:jpg|png|webp)$/);
     const bytes = await readFile(path.join("dist", ref));
     assert.ok(bytes.length > 0);

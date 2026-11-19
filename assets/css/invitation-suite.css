@@ -315,7 +315,7 @@ dialog:not(.invitation-gate) h2 { font-size: clamp(30px, 4vw, 42px); }
 
 /* Existing photograph frames double as accessible gallery entry points. */
 .hero-photo, .story-photo { position: relative; }
-.hero-memento { z-index: 3; }
+.hero-memento { z-index: 4; }
 .photo-open {
   position: absolute;
   inset: 0;
@@ -325,23 +325,30 @@ dialog:not(.invitation-gate) h2 { font-size: clamp(30px, 4vw, 42px); }
   border: 0;
   padding: 0;
   background: transparent;
-  cursor: zoom-in;
+  cursor: pointer;
+  touch-action: pan-y pinch-zoom;
 }
-.photo-open-icon {
+.opening-arrow {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 32px;
-  height: 32px;
+  top: calc(50% - 22px);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  border: 1px solid #e7c699a0;
-  background: #642d23e6;
+  border: 0;
+  padding: 0;
+  background: transparent;
   color: var(--ink);
 }
-.photo-open-icon svg { width: 17px; height: 17px; stroke-width: 1.5; }
-.hero-memento .photo-open-icon { width: 25px; height: 25px; top: 9px; right: 9px; }
-.photo-open:hover .photo-open-icon { background: #873f2e; }
+.opening-arrow::before { content: ""; position: absolute; inset: 8px; border-radius: 50%; border: 1px solid #e7c69990; background: #642d23bb; }
+.opening-arrow svg { position: relative; width: 14px; height: 14px; stroke-width: 1.5; }
+.opening-previous { left: 5px; }
+.opening-next { right: 5px; }
+.gallery-item { cursor: pointer; }
+#dev-dialog .editor-help { font-size: 14px; line-height: 1.7; color: var(--muted); margin-block: 12px 20px; }
+#dev-dialog .editor-section-heading { margin-top: 32px; }
+#dev-dialog #add-opening-photos { margin-block: 16px 0; background: #f5e2c4; color: #642d23; }
 #photo-dialog {
   width: min(1040px, calc(100% - 32px));
   max-width: none;
@@ -372,6 +379,7 @@ dialog:not(.invitation-gate) h2 { font-size: clamp(30px, 4vw, 42px); }
   z-index: 2;
 }
 #photo-dialog > [data-close] { top: 8px; right: 8px; }
+#photo-dialog > .icon-button[hidden] { display: none; }
 #photo-dialog .photo-previous { left: 10px; right: auto; top: calc(50% - 22px); }
 #photo-dialog .photo-next { right: 10px; top: calc(50% - 22px); }
 #photo-dialog .photo-position { font-size: 14px; line-height: 1.5; margin: 17px 0 0; text-align: center; color: var(--foil); }

@@ -120,6 +120,7 @@ test("development photo editor rejects foreign origins, unknown slots and disgui
   const server = await createServer({
     configFile: false,
     root: scratch,
+    cacheDir: path.join(scratch, "node_modules/.vite"),
     plugins: config.plugins,
     server: { host: "127.0.0.1", port: 0 },
   });
@@ -174,6 +175,14 @@ test("development photo editor rejects foreign origins, unknown slots and disgui
     assert.equal((await saved.json()).hero, "/content/hero.jpg");
     const reset = await fetch(`${base}?slot=hero`, { method: "DELETE" });
     assert.deepEqual(await reset.json(), {});
+    const extraSlots = ["keepsake", "opening-00000000-0000-4000-8000-000000000001", "opening-00000000-0000-4000-8000-000000000002"];
+    const writes = await Promise.all(extraSlots.map(slot => fetch(`${base}?slot=${slot}`, { method: "PUT", body: image })));
+    assert.ok(writes.every(response => response.status === 200));
+    const multiple = await (await fetch(base)).json();
+    assert.deepEqual(Object.keys(multiple).sort(), [...extraSlots].sort());
+    for (const slot of extraSlots) assert.deepEqual(await readFile(path.join(scratch, "public/content", slot + ".jpg")), image);
+    for (const slot of extraSlots) await fetch(`${base}?slot=${slot}`, { method: "DELETE" });
+    assert.deepEqual(await (await fetch(base)).json(), {});
     assert.equal(
       (await fetch(`${base}?slot=hero`, { method: "POST" })).status,
       405,

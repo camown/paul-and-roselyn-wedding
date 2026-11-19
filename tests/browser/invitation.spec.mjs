@@ -1,4 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { readFile, cp, mkdir, mkdtemp, rm } from "node:fs/promises";
+import path from "node:path";
+import { createServer } from "vite";
+import configFactory from "../../vite.config.mjs";
 import {
   CAMERA_OPENS_AT,
   CAMERA_CLOSES_AT,
@@ -282,23 +286,34 @@ for (const width of [390, 1440]) test("opening photos support gallery arrows, ke
   await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
   await prepare(page);
   await enter(page);
-  const cover = page.getByRole("button", { name: "Enlarge cover photograph", exact: true });
-  await cover.click();
+  const cover = page.getByRole("button", { name: "Open the opening photo gallery", exact: true });
+  await page.getByRole("button", { name: "Next opening photograph", exact: true }).click();
+  await expect(page.locator(".hero-photo > img")).toHaveAttribute("data-photo", "keepsake");
+  await page.getByRole("button", { name: "Previous opening photograph", exact: true }).click();
+  await expect(page.locator(".hero-photo > img")).toHaveAttribute("data-photo", "hero");
+  expect(await page.locator(".photo-open-icon, .expand-icon").count()).toBe(0);
+  await cover.dispatchEvent("pointerdown", { pointerId: 7, pointerType: "touch", isPrimary: true, clientX: 270, clientY: 230 });
+  await cover.dispatchEvent("pointerup", { pointerId: 7, pointerType: "touch", isPrimary: true, clientX: 100, clientY: 235 });
+  await expect(page.locator(".hero-photo > img")).toHaveAttribute("data-photo", "keepsake");
+  await cover.dispatchEvent("click", { detail: 1 });
+  await expect(page.locator("#photo-dialog")).not.toBeVisible();
+  await page.getByRole("button", { name: "Previous opening photograph", exact: true }).click();
+  await cover.press("Enter");
   await expect(page.locator("#photo-dialog")).toBeVisible();
-  await expect(page.locator("#photo-position")).toContainText("1 / 5");
+  await expect(page.locator("#photo-position")).toContainText("Opening photographs · 1 / 2");
   await page.getByRole("button", { name: "Previous photograph", exact: true }).click();
-  await expect(page.locator("#photo-position")).toContainText("5 / 5");
+  await expect(page.locator("#photo-position")).toContainText("2 / 2");
   await page.getByRole("button", { name: "Next photograph", exact: true }).click();
-  await expect(page.locator("#photo-position")).toContainText("1 / 5");
+  await expect(page.locator("#photo-position")).toContainText("1 / 2");
   await page.keyboard.press("ArrowRight");
-  await expect(page.locator("#photo-position")).toContainText("2 / 5");
+  await expect(page.locator("#photo-position")).toContainText("2 / 2");
   const stage = page.locator(".photo-stage");
   await stage.dispatchEvent("pointerdown", { pointerId: 1, pointerType: "touch", isPrimary: true, clientX: 270, clientY: 230 });
   await stage.dispatchEvent("pointerup", { pointerId: 1, pointerType: "touch", isPrimary: true, clientX: 100, clientY: 235 });
-  await expect(page.locator("#photo-position")).toContainText("3 / 5");
+  await expect(page.locator("#photo-position")).toContainText("1 / 2");
   await stage.dispatchEvent("pointerdown", { pointerId: 2, pointerType: "touch", isPrimary: true, clientX: 200, clientY: 230 });
   await stage.dispatchEvent("pointerup", { pointerId: 2, pointerType: "touch", isPrimary: true, clientX: 195, clientY: 400 });
-  await expect(page.locator("#photo-position")).toContainText("3 / 5");
+  await expect(page.locator("#photo-position")).toContainText("1 / 2");
   const bounds = await page.locator("#photo-dialog").boundingBox();
   expect(bounds.x).toBeGreaterThanOrEqual(0);
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
@@ -306,25 +321,105 @@ for (const width of [390, 1440]) test("opening photos support gallery arrows, ke
   await page.keyboard.press("Escape");
   await expect(cover).toBeFocused();
   await page.getByRole("button", { name: "Enlarge the small opening photograph", exact: true }).click();
-  await expect(page.locator("#photo-position")).toContainText("5 / 5");
+  await expect(page.locator("#photo-position")).toContainText("2 / 2");
   await page.getByRole("button", { name: "Close enlarged photo", exact: true }).click();
   await expect(page.locator("#photo-dialog")).not.toBeVisible();
 });
 
-test("local photo shortcut opens the editor with five replacement slots", async ({ page }) => {
+test("local photo shortcut opens separate opening and memory settings", async ({ page }) => {
   await prepare(page);
   await page.goto("/?photos=edit");
   await expect(page.locator("#dev-dialog")).toBeVisible();
   await expect(page.locator("#invitation-gate")).not.toBeVisible();
-  await expect(page.locator("#photo-settings input[type=file]")).toHaveCount(5);
+  await expect(page.locator("#opening-photo-settings input[type=file]")).toHaveCount(2);
+  await expect(page.locator("#photo-settings input[type=file]")).toHaveCount(4);
+  await page.screenshot({ path: "docs/screenshots/local-photo-settings.jpg", quality: 85 });
   await page.getByRole("button", { name: "Close photo settings", exact: true }).click();
   await expect(page.locator("#dev-button")).toBeVisible();
   await page.locator("#dev-button").click();
   await expect(page.locator("#dev-dialog")).toBeVisible();
 });
 
-for (const width of [320, 390, 768, 1440]) test("first visit and replay land on the centered invitation at " + width + "px", async ({ page }) => {
-  const height = width === 320 ? 720 : width === 390 ? 844 : 1000;
+test("adding and removing opening photos stays separate from Memories", async ({ page }) => {
+  await prepare(page);
+  const image = await readFile("assets/images/story-couple.jpg");
+  const saved = {};
+  await page.route("**/__dev/photos*", async route => {
+    const slot = new URL(route.request().url()).searchParams.get("slot");
+    if (route.request().method() === "PUT") saved[slot] = `/__test-opening-${slot}.jpg`;
+    if (route.request().method() === "DELETE") delete saved[slot];
+    await route.fulfill({ json: saved });
+  });
+  await page.route("**/__test-opening-*.jpg*", route => route.fulfill({ contentType: "image/jpeg", body: image }));
+  await page.goto("/?photos=edit");
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Add opening photos", exact: true }).click();
+  await (await chooser).setFiles([
+    { name: "opening-a.jpg", mimeType: "image/jpeg", buffer: image },
+    { name: "opening-b.jpg", mimeType: "image/jpeg", buffer: image },
+  ]);
+  await expect(page.locator("#editor-status")).toHaveText("2 opening photographs saved to the project.");
+  await expect(page.locator("#opening-photo-settings .editor-slot")).toHaveCount(4);
+  await page.getByRole("button", { name: "Close photo settings", exact: true }).click();
+  await page.getByRole("button", { name: "Open the opening photo gallery", exact: true }).click();
+  await expect(page.locator("#photo-position")).toContainText("Opening photographs · 1 / 4");
+  await page.getByRole("button", { name: "Close enlarged photo", exact: true }).click();
+  await page.getByRole("button", { name: "Enlarge our first memory", exact: true }).click();
+  await expect(page.locator("#photo-position")).toContainText("Memories · 1 / 3");
+  await page.getByRole("button", { name: "Close enlarged photo", exact: true }).click();
+  await page.locator("#dev-button").click();
+  await page.getByRole("button", { name: "Remove opening photo 1 from gallery", exact: true }).click();
+  await expect(page.locator("#opening-photo-settings .editor-slot")).toHaveCount(3);
+  expect(Object.keys(saved)).toHaveLength(1);
+});
+
+test("real multi-photo uploads persist in an isolated local project without reloading the editor", async ({ page }) => {
+  test.setTimeout(60000);
+  const artifacts = path.resolve(".test-artifacts");
+  await mkdir(artifacts, { recursive: true });
+  const fixture = await mkdtemp(path.join(artifacts, "photo-editor-"));
+  let server;
+  try {
+    await Promise.all(["index.html", "assets", "shared", "package.json"].map(name => cp(name, path.join(fixture, name), { recursive: true })));
+    const config = configFactory({ mode: "test" });
+    // The fixture lives under the parent's artifact folder. Allow its source to
+    // be watched while preserving the real public/content exclusion under test.
+    const watch = { ignored: config.server.watch.ignored.filter(pattern => pattern !== "**/.test-artifacts/**") };
+    server = await createServer({ configFile: false, root: fixture, plugins: config.plugins, cacheDir: path.join(fixture, ".vite-cache"), server: { host: "127.0.0.1", port: 0, watch } });
+    await server.listen();
+    const base = `http://127.0.0.1:${server.httpServer.address().port}`;
+    await page.goto(base + "/?photos=edit");
+    await expect(page.locator("#dev-dialog")).toBeVisible();
+    let reloads = 0;
+    page.on("framenavigated", frame => { if (frame === page.mainFrame()) reloads++; });
+    const image = await readFile("assets/images/story-couple.jpg");
+    const picker = page.waitForEvent("filechooser");
+    await page.getByRole("button", { name: "Add opening photos", exact: true }).click();
+    await (await picker).setFiles([
+      { name: "real-a.jpg", mimeType: "image/jpeg", buffer: image },
+      { name: "real-b.jpg", mimeType: "image/jpeg", buffer: image },
+    ]);
+    await expect(page.locator("#editor-status")).toHaveText("2 opening photographs saved to the project.");
+    // Allow a file-watcher reload debounce to elapse; the editor must stay open.
+    await page.waitForTimeout(350);
+    expect(reloads).toBe(0);
+    const manifest = JSON.parse(await readFile(path.join(fixture, "public/content/photos.json"), "utf8"));
+    expect(Object.keys(manifest)).toHaveLength(2);
+    for (const ref of Object.values(manifest)) expect(await readFile(path.join(fixture, "public", ref))).toEqual(image);
+    await page.reload();
+    await expect(page.locator("#opening-photo-settings .editor-slot")).toHaveCount(4);
+    await page.getByRole("button", { name: "Close photo settings", exact: true }).click();
+    await page.getByRole("button", { name: "Open the opening photo gallery", exact: true }).click();
+    await expect(page.locator("#photo-position")).toContainText("1 / 4");
+  } finally {
+    if (server) await server.close();
+    if (!fixture.startsWith(artifacts + path.sep)) throw new Error("Unexpected test fixture path");
+    await rm(fixture, { recursive: true, force: true });
+  }
+});
+
+for (const width of [320, 390, 768, 1366, 1440]) test("first visit and replay land on the centered invitation at " + width + "px", async ({ page }) => {
+  const height = width === 320 ? 720 : width === 390 ? 844 : width === 1366 ? 768 : 1000;
   await page.setViewportSize({ width, height });
   await prepare(page);
   await page.goto("/#rsvp");

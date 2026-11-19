@@ -19,7 +19,7 @@ The deployment uses Vercel's standard Vite build and Node.js functions in `api/`
 - `GET /api/event-status` must return JSON with `serverNow`, the fixed schedule and `Cache-Control: private, no-store`. Before 19 December 2026 Philippine time, the phase must be `scheduled`; the header camera icon is hidden, and camera permission is never requested. `POST` returns 405.
 - `/api/rsvp` deliberately returns 503 until durable guest-scoped storage is configured. An RSVP saved in this revision is only a device-local preview; it is not delivered to the couple.
 - Camera capture is available only from 19 December 00:00 to 20 December 00:00 Asia/Manila; developed viewing starts 20 December at noon. Browser-local photos and limits remain a demonstration, not secure cloud authorization.
-- `/__dev/photos`, `/pictures/`, `/docs/`, `/.env`, and arbitrary nonexistent API paths must not expose source, originals or editor endpoints. The footer photo editor is development-only.
+- `/__dev/photos`, `/pictures/`, `/docs/`, `/.env`, and arbitrary nonexistent API paths must not expose source, originals or editor endpoints. The local Photos control and `/?photos=edit` shortcut are development-only. Opening album extras are published from `public/content/photos.json` with the next build; adding them locally does not instantly upload them to Vercel.
 - Hashed `/assets/` files may cache for one year. `/content/` photo overrides revalidate; API responses never cache. Verify HTTPS and the configured security headers.
 
 ## Local verification

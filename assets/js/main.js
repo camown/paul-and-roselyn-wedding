@@ -9,6 +9,7 @@ import { FILM_LIMIT, filmIsDeveloped, recordFilmExposure } from "./film.mjs";
 import { createCalendar } from "./calendar.mjs";
 import { createPreviewArchive } from "./export.mjs";
 import { getSupabaseClient } from "./supabase.mjs";
+import { openingPhotoSlots, isOpeningPhotoSlot } from "../../shared/photo-slots.mjs";
 // Initialize the optional host-session client without creating a user or sending guest data.
 getSupabaseClient();
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -90,32 +91,33 @@ const getPhotos = () =>
   storeAction("photos", "readonly", (store) => store.getAll());
 const getReply = () =>
   storeAction("settings", "readonly", (store) => store.get("reply"));
-const defaults = {
-  hero: "/assets/images/story-couple.jpg",
-  story: "/assets/images/gallery-photo-2.jpg",
-  gallery1: "/assets/images/gallery-photo-1.jpg",
-  gallery2: "/assets/images/gallery-photo-2.jpg",
-  gallery3: "/assets/images/gallery-photo-3.jpg",
-};
 // URL assets are explicit imports so Vite copies and hashes every default photograph.
 const photoSources = {
   hero: new URL("../images/story-couple.jpg", import.meta.url).href,
+  keepsake: new URL("../images/gallery-photo-3.jpg", import.meta.url).href,
   story: new URL("../images/gallery-photo-2.jpg", import.meta.url).href,
   gallery1: new URL("../images/gallery-photo-1.jpg", import.meta.url).href,
   gallery2: new URL("../images/gallery-photo-2.jpg", import.meta.url).href,
   gallery3: new URL("../images/gallery-photo-3.jpg", import.meta.url).href,
 };
 let customPhotos = {};
+const photoVersions = {};
+let updateLocalPhotoSettings = () => {};
+function photoSource(slot) {
+  const source = customPhotos[slot] || photoSources[slot];
+  return source && photoVersions[slot] ? `${source}?v=${photoVersions[slot]}` : source;
+}
 function applyPhotos() {
   $$("[data-photo]").forEach((img) => {
-    const source =
-      customPhotos[img.dataset.photo] || photoSources[img.dataset.photo];
+    const source = photoSource(img.dataset.photo);
+    if (!source) return;
     img.src = source;
     img.onerror = () => {
       img.onerror = null;
-      img.src = photoSources[img.dataset.photo];
+      if (photoSources[img.dataset.photo]) img.src = photoSources[img.dataset.photo];
     };
   });
+  updateOpeningPhoto(0);
 }
 async function loadPhotos() {
   try {
@@ -131,6 +133,7 @@ async function loadPhotos() {
     /* The shipped defaults remain available without a manifest. */
   }
   applyPhotos();
+  updateLocalPhotoSettings();
 }
 loadPhotos();
 $("#menu-toggle").addEventListener("click", () => {
@@ -274,19 +277,42 @@ function requestConfirmation(message) {
 $("#confirm-delete").addEventListener("click", () =>
   $("#confirm-dialog").close("confirm"),
 );
-const gallerySlots = ["hero", "story", "gallery1", "gallery2", "gallery3"];
-const galleryLabels = ["Our next chapter", "Us, through the years", "Together", "Through the years", "Always you"];
+let currentAlbum = "opening";
+const gallerySlots = () => currentAlbum === "opening" ? openingPhotoSlots(customPhotos) : currentAlbum === "story" ? ["story"] : ["gallery1", "gallery2", "gallery3"];
+let openingActiveSlot = "hero";
+function updateOpeningPhoto(delta) {
+  const slots = openingPhotoSlots(customPhotos);
+  const current = Math.max(0, slots.indexOf(openingActiveSlot));
+  const next = (current + delta + slots.length) % slots.length;
+  openingActiveSlot = slots[next];
+  const image = $(".hero-photo > img");
+  image.dataset.photo = openingActiveSlot;
+  image.src = photoSource(openingActiveSlot);
+  image.alt = next === 0 ? "Paul and Roselyn together" : `Opening photograph ${next + 1}`;
+  $("#opening-photo-open").dataset.lightbox = openingActiveSlot;
+}
+$("#opening-previous").addEventListener("click", () => updateOpeningPhoto(-1));
+$("#opening-next").addEventListener("click", () => updateOpeningPhoto(1));
+$("#opening-photo-open").addEventListener("keydown", (event) => {
+  if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+  event.preventDefault();
+  updateOpeningPhoto(event.key === "ArrowRight" ? 1 : -1);
+});
 let galleryIndex = 0;
 function showGalleryPhoto(index) {
-  galleryIndex = (index + gallerySlots.length) % gallerySlots.length;
-  const source = $(`[data-photo="${gallerySlots[galleryIndex]}"]`);
-  $("#enlarged-photo").src = source.src;
-  $("#enlarged-photo").alt = source.alt;
-  $("#photo-position").textContent = `${galleryLabels[galleryIndex]} · ${galleryIndex + 1} / ${gallerySlots.length}`;
+  const slots = gallerySlots();
+  galleryIndex = (index + slots.length) % slots.length;
+  const title = currentAlbum === "opening" ? "Opening photographs" : currentAlbum === "story" ? "Our story" : "Memories";
+  $("#enlarged-photo").src = photoSource(slots[galleryIndex]);
+  $("#enlarged-photo").alt = `${title}, photograph ${galleryIndex + 1}`;
+  $("#photo-position").textContent = `${title} · ${galleryIndex + 1} / ${slots.length}`;
+  $("#photo-previous").hidden = slots.length < 2;
+  $("#photo-next").hidden = slots.length < 2;
 }
 $$("[data-lightbox]").forEach((button) => {
   button.addEventListener("click", () => {
-    showGalleryPhoto(gallerySlots.indexOf(button.dataset.lightbox));
+    currentAlbum = button.dataset.album || "memories";
+    showGalleryPhoto(gallerySlots().indexOf(button.dataset.lightbox));
     openDialog("photo-dialog");
   });
 });
@@ -298,22 +324,31 @@ photoDialog.addEventListener("keydown", (event) => {
   event.preventDefault();
   showGalleryPhoto(galleryIndex + (event.key === "ArrowRight" ? 1 : -1));
 });
-let photoSwipe = null;
-photoDialog.addEventListener("pointerdown", (event) => {
-  if (event.pointerType !== "touch" || !event.isPrimary || event.target.closest("button")) return;
-  photoSwipe = { id: event.pointerId, x: event.clientX, y: event.clientY };
-});
-window.addEventListener("pointerup", (event) => {
-  if (!photoSwipe || photoSwipe.id !== event.pointerId) return;
-  const dx = event.clientX - photoSwipe.x;
-  const dy = event.clientY - photoSwipe.y;
-  photoSwipe = null;
-  if (photoDialog.open && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.25)
-    showGalleryPhoto(galleryIndex + (dx < 0 ? 1 : -1));
-});
-window.addEventListener("pointercancel", () => { photoSwipe = null; });
+function bindPhotoSwipe(element, move) {
+  let swipe = null, suppressClickUntil = 0;
+  element.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch" || !event.isPrimary || event.target.closest("button:not(.photo-open)")) return;
+    swipe = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  });
+  window.addEventListener("pointerup", (event) => {
+    if (!swipe || swipe.id !== event.pointerId) return;
+    const dx = event.clientX - swipe.x, dy = event.clientY - swipe.y;
+    swipe = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+      suppressClickUntil = performance.now() + 400;
+      move(dx < 0 ? 1 : -1);
+    }
+  });
+  window.addEventListener("pointercancel", () => { swipe = null; });
+  element.addEventListener("click", (event) => {
+    if (event.detail !== 0 && performance.now() < suppressClickUntil && event.target.closest(".photo-open")) {
+      event.preventDefault(); event.stopImmediatePropagation();
+    }
+  }, true);
+}
+bindPhotoSwipe(photoDialog, (delta) => { if (photoDialog.open) showGalleryPhoto(galleryIndex + delta); });
+bindPhotoSwipe($(".hero-photo"), updateOpeningPhoto);
 photoDialog.addEventListener("close", () => {
-  photoSwipe = null;
   $("#enlarged-photo").removeAttribute("src");
 });
 $$("[data-color]").forEach((button) =>
@@ -699,25 +734,40 @@ if (import.meta.env.DEV) {
   $("#dev-button").addEventListener("click", () => openDialog("dev-dialog"));
   const labels = {
     hero: "Cover photograph",
+    keepsake: "Small opening keepsake",
     story: "Our story",
     gallery1: "Memory 01",
     gallery2: "Memory 02",
     gallery3: "Memory 03",
   };
-  Object.keys(defaults).forEach((slot) => {
+  async function saveLocalPhoto(slot, method, file) {
+    if (file && file.size > 8 * 1024 * 1024) throw new Error("Choose an image smaller than 8 MB.");
+    const response = await fetch(`/__dev/photos?slot=${slot}`, {
+      method, body: file,
+      headers: file ? { "Content-Type": file.type } : {},
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    customPhotos = result;
+    if (file) photoVersions[slot] = Date.now();
+    else delete photoVersions[slot];
+    applyPhotos();
+    updateLocalPhotoSettings();
+  }
+  function addEditorRow(slot, target, titleText) {
     const row = document.createElement("div");
     row.className = "editor-slot";
     const img = document.createElement("img");
     img.dataset.photo = slot;
-    img.alt = `${labels[slot]} preview`;
+    img.alt = `${titleText} preview`;
     const body = document.createElement("div");
     const title = document.createElement("p");
-    title.textContent = labels[slot];
+    title.textContent = titleText;
     const label = document.createElement("button");
     label.type = "button";
     label.className = "text-button";
     label.textContent = "Replace photo";
-    label.setAttribute("aria-label", `Replace ${labels[slot].toLowerCase()}`);
+    label.setAttribute("aria-label", `Replace ${titleText.toLowerCase()}`);
     const input = document.createElement("input");
     input.id = `upload-${slot}`;
     input.type = "file";
@@ -726,35 +776,21 @@ if (import.meta.env.DEV) {
     const reset = document.createElement("button");
     reset.type = "button";
     reset.className = "icon-button";
-    reset.innerHTML = icon("reset");
+    const extra = isOpeningPhotoSlot(slot);
+    reset.innerHTML = icon(extra ? "trash" : "reset");
     reset.setAttribute(
       "aria-label",
-      `Restore default ${labels[slot].toLowerCase()}`,
+      extra ? `Remove ${titleText.toLowerCase()} from gallery` : `Restore default ${titleText.toLowerCase()}`,
     );
     const edit = async (method, file) => {
       input.disabled = true;
       reset.disabled = true;
       try {
-        if (file && file.size > 8 * 1024 * 1024)
-          throw new Error("Choose an image smaller than 8 MB.");
         $("#editor-status").textContent = "Saving to project…";
-        const response = await fetch(`/__dev/photos?slot=${slot}`, {
-          method,
-          body: file,
-          headers: file ? { "Content-Type": file.type } : {},
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error);
-        customPhotos = result;
-        applyPhotos();
-        // Bust browser cache after overwriting the same asset filename.
-        if (file)
-          $$(`[data-photo="${slot}"]`).forEach((el) => {
-            el.src = `${customPhotos[slot]}?v=${Date.now()}`;
-          });
+        await saveLocalPhoto(slot, method, file);
         $("#editor-status").textContent =
           method === "DELETE"
-            ? "Default restored."
+            ? (extra ? "Photo removed from the opening gallery." : "Default restored.")
             : "Photo saved in the project. It will be included in the next build.";
       } catch (error) {
         $("#editor-status").textContent = error.message;
@@ -770,9 +806,38 @@ if (import.meta.env.DEV) {
     reset.addEventListener("click", () => edit("DELETE"));
     body.append(title, label, input);
     row.append(img, body, reset);
-    $("#photo-settings").append(row);
+    target.append(row);
+  }
+  updateLocalPhotoSettings = () => {
+    const opening = $("#opening-photo-settings");
+    const memories = $("#photo-settings");
+    opening.replaceChildren(); memories.replaceChildren();
+    ["hero", "keepsake"].forEach(slot => addEditorRow(slot, opening, labels[slot]));
+    openingPhotoSlots(customPhotos).filter(isOpeningPhotoSlot).forEach((slot, i) => addEditorRow(slot, opening, `Opening photo ${i + 1}`));
+    ["story", "gallery1", "gallery2", "gallery3"].forEach(slot => addEditorRow(slot, memories, labels[slot]));
+    applyPhotos();
+  };
+  const addOpening = $("#add-opening-photos"), openingFiles = $("#opening-gallery-files");
+  addOpening.addEventListener("click", () => openingFiles.click());
+  openingFiles.addEventListener("change", async () => {
+    const files = [...openingFiles.files];
+    if (!files.length) return;
+    addOpening.disabled = true; openingFiles.disabled = true;
+    let added = 0;
+    try {
+      for (const file of files) {
+        $("#editor-status").textContent = `Adding photograph ${added + 1} of ${files.length}…`;
+        await saveLocalPhoto(`opening-${crypto.randomUUID()}`, "PUT", file);
+        added++;
+      }
+      $("#editor-status").textContent = `${added} opening photograph${added === 1 ? "" : "s"} saved to the project.`;
+    } catch (error) {
+      $("#editor-status").textContent = `${added} added. ${error.message}`;
+    } finally {
+      addOpening.disabled = false; openingFiles.disabled = false; openingFiles.value = "";
+    }
   });
-  applyPhotos();
+  updateLocalPhotoSettings();
   if (new URL(location.href).searchParams.get("photos") === "edit") {
     if (invitationGate.open) invitationGate.close();
     openDialog("dev-dialog");

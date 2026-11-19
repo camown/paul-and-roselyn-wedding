@@ -126,9 +126,9 @@
             alt="Paul and Roselyn together"
             fetchpriority="high"
           />
-          <button class="photo-open" data-lightbox="hero" aria-label="Enlarge cover photograph">
-            <span class="photo-open-icon" data-icon="expand"></span>
-          </button>
+          <button class="photo-open" id="opening-photo-open" data-album="opening" data-lightbox="hero" aria-label="Open the opening photo gallery"></button>
+          <button class="opening-arrow opening-previous" id="opening-previous" aria-label="Previous opening photograph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button>
+          <button class="opening-arrow opening-next" id="opening-next" aria-label="Next opening photograph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button>
           <figcaption>
             <span>Our next chapter</span><span>12.19.26</span>
           </figcaption>
@@ -137,14 +137,12 @@
           >
           <div class="hero-memento">
             <img
-              data-photo="gallery3"
+              data-photo="keepsake"
               src="/assets/images/gallery-photo-3.jpg"
               alt="Another memory of Paul and Roselyn together"
             />
             <span>Us, since 2017.</span>
-            <button class="photo-open" data-lightbox="gallery3" aria-label="Enlarge the small opening photograph">
-              <span class="photo-open-icon" data-icon="expand"></span>
-            </button>
+            <button class="photo-open" data-album="opening" data-lightbox="keepsake" aria-label="Enlarge the small opening photograph"></button>
           </div>
         </figure>
         <span class="hero-side-note" aria-hidden="true"
@@ -168,9 +166,7 @@
             alt="A memory of Paul and Roselyn"
             loading="lazy"
           /><span class="photo-caption">Us, through the years.</span>
-          <button class="photo-open" data-lightbox="story" aria-label="Enlarge our story photograph">
-            <span class="photo-open-icon" data-icon="expand"></span>
-          </button>
+          <button class="photo-open" data-album="story" data-lightbox="story" aria-label="Enlarge our story photograph"></button>
         </div>
         <div class="story-copy">
           <p class="eyebrow">Our story</p>
@@ -377,8 +373,7 @@
               src="/assets/images/gallery-photo-1.jpg"
               alt="Paul and Roselyn, a favorite memory"
               loading="lazy"
-            /><span>01 / Together</span
-            ><span class="expand-icon" data-icon="expand"></span></button
+            /><span>01 / Together</span></button
           ><button
             class="gallery-item"
             data-lightbox="gallery2"
@@ -389,8 +384,7 @@
               src="/assets/images/gallery-photo-2.jpg"
               alt="A moment from our story"
               loading="lazy"
-            /><span>02 / Through the years</span
-            ><span class="expand-icon" data-icon="expand"></span></button
+            /><span>02 / Through the years</span></button
           ><button
             class="gallery-item"
             data-lightbox="gallery3"
@@ -401,8 +395,7 @@
               src="/assets/images/gallery-photo-3.jpg"
               alt="Another memory of us"
               loading="lazy"
-            /><span>03 / Always you</span
-            ><span class="expand-icon" data-icon="expand"></span>
+            /><span>03 / Always you</span>
           </button>
         </div>
         <div class="camera-invitation">
@@ -705,6 +698,12 @@
         Replacements save to this project on D: and are included in the next
         build. JPG, PNG or WebP, up to 8 MB.
       </p>
+      <h3>Opening photo gallery</h3>
+      <p class="editor-help">The large opening photograph and small keepsake have their own gallery, separate from Memories.</p>
+      <div id="opening-photo-settings"></div>
+      <button class="button" id="add-opening-photos" type="button">Add opening photos</button>
+      <input type="file" id="opening-gallery-files" accept="image/jpeg,image/png,image/webp" multiple hidden />
+      <h3 class="editor-section-heading">Our story &amp; Memories</h3>
       <div id="photo-settings"></div>
       <p id="editor-status" role="status"></p>
     </dialog>

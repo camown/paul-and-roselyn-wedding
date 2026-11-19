@@ -1,13 +1,15 @@
 import { defineConfig, loadEnv } from "vite";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile, rename } from "node:fs/promises";
 import path from "node:path";
 import { eventStatus } from "./shared/event-window.mjs";
 import { readSupabaseConfig } from "./shared/supabase-config.mjs";
+import { isPhotoSlot } from "./shared/photo-slots.mjs";
 
 // Deliberately available only on the loopback development server, never in a build.
 const photoEditor = {
   name: "local-photo-editor",
   configureServer(server) {
+    let photoWriteQueue = Promise.resolve();
     server.middlewares.use("/api/event-status", (req, res) => {
       res.setHeader("Content-Type", "application/json");
       res.setHeader("Cache-Control", "private, no-store");
@@ -27,9 +29,9 @@ const photoEditor = {
         res.statusCode = 403;
         return res.end(JSON.stringify({ error: "Local editor only." }));
       }
-      const slots = ["hero", "story", "gallery1", "gallery2", "gallery3"];
-      const directory = path.resolve("public/content");
+      const directory = path.resolve(server.config.root, "public/content");
       const manifest = path.join(directory, "photos.json");
+      let releaseWrite;
       try {
         if (req.method === "GET") {
           let saved = {};
@@ -41,10 +43,13 @@ const photoEditor = {
         const slot = new URL(req.url, "http://localhost").searchParams.get(
           "slot",
         );
-        if (!slots.includes(slot)) {
+        if (!isPhotoSlot(slot)) {
           res.statusCode = 400;
           return res.end(JSON.stringify({ error: "Unknown photo slot." }));
         }
+        const previousWrite = photoWriteQueue;
+        photoWriteQueue = new Promise((resolve) => { releaseWrite = resolve; });
+        await previousWrite;
         let saved = {};
         try {
           saved = JSON.parse(await readFile(manifest, "utf8"));
@@ -88,14 +93,15 @@ const photoEditor = {
           return res.end(JSON.stringify({ error: "Method not allowed." }));
         }
         await mkdir(directory, { recursive: true });
-        await writeFile(manifest, JSON.stringify(saved, null, 2));
+        await writeFile(manifest + ".tmp", JSON.stringify(saved, null, 2));
+        await rename(manifest + ".tmp", manifest);
         res.end(JSON.stringify(saved));
       } catch {
         res.statusCode = 500;
         res.end(
           JSON.stringify({ error: "Could not save this image. Try again." }),
         );
-      }
+      } finally { releaseWrite?.(); }
     });
   },
 };
@@ -104,7 +110,10 @@ export default defineConfig(({ mode }) => {
   readSupabaseConfig({ ...loadEnv(mode, process.cwd(), "VITE_"), ...process.env });
   return {
     plugins: [photoEditor],
-    server: { host: "127.0.0.1", port: 3000, strictPort: true },
+    server: {
+      host: "127.0.0.1", port: 3000, strictPort: true,
+      watch: { ignored: ["**/.test-artifacts/**", "**/.test-artifacts-*/**", "**/docs/**", "**/tests/**", "**/public/content/**"] },
+    },
     build: { target: "es2022" },
   };
 });
