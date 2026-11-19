@@ -6,3 +6,9 @@ scratch_*.js
 crop_photos.js
 assets/images/extracted_panels/
 
+
+dist/
+.env
+.env.*
+!.env.example
+.test-artifacts/
